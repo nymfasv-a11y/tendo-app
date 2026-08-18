@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tendo — прототип</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500,600&family=Manrope:wght@400;500;600;700;800&display=swap');
   :root {
@@ -434,7 +435,7 @@
     <div class="section" style="background:rgba(239,95,146,0.08);border-color:rgba(239,95,146,0.25)">
       <div class="section-head"><span class="section-title" style="color:var(--wave)" data-i18n="noAccountWarningTitle">Данные хранятся только на этом телефоне</span></div>
       <div class="empty-advice" style="text-align:left;padding-bottom:12px" data-i18n="noAccountWarningDesc">Без входа в аккаунт данные будут потеряны при смене телефона или удалении приложения.</div>
-      <button class="save-btn" onclick="alert('Вход через Google (демо)')" style="display:flex;align-items:center;justify-content:center;gap:10px">
+      <button class="save-btn" onclick="signInWithGoogle()" style="display:flex;align-items:center;justify-content:center;gap:10px">
         <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0012 23z"/><path fill="#fff" d="M5.84 14.09A6.6 6.6 0 015.5 12c0-.73.12-1.43.34-2.09V7.07H2.18A11 11 0 001 12c0 1.77.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 00-9.82 6.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         <span data-i18n="signInGoogle">Войти через Google</span>
       </button>
@@ -1306,17 +1307,36 @@
     }
   }
 
+  let profileSaveTimeout = null;
+  function saveOwnerProfileToServer() {
+    if (!serverConnected) return;
+    clearTimeout(profileSaveTimeout);
+    profileSaveTimeout = setTimeout(() => {
+      apiFetch('/me/profile', {
+        method: 'PUT',
+        body: JSON.stringify({
+          about: ownerProfile.about, interests: ownerProfile.interests,
+          important_dates: ownerProfile.dates, communication_style: ownerProfile.communication
+        })
+      }).catch(err => console.warn('Не удалось сохранить профиль на сервере:', err.message));
+    }, 600);
+  }
+
   document.getElementById('ownerAbout')?.addEventListener('change', () => {
     ownerProfile.about = document.getElementById('ownerAbout').value;
+    saveOwnerProfileToServer();
   });
   document.getElementById('ownerInterests')?.addEventListener('change', () => {
     ownerProfile.interests = document.getElementById('ownerInterests').value;
+    saveOwnerProfileToServer();
   });
   document.getElementById('ownerDates')?.addEventListener('change', () => {
     ownerProfile.dates = document.getElementById('ownerDates').value;
+    saveOwnerProfileToServer();
   });
   document.getElementById('ownerCommunication')?.addEventListener('change', () => {
     ownerProfile.communication = document.getElementById('ownerCommunication').value;
+    saveOwnerProfileToServer();
   });
 
   function toggleSetting(id) {
@@ -1416,6 +1436,40 @@
 
   // ===== ПОДКЛЮЧЕНИЕ К НАСТОЯЩЕМУ СЕРВЕРУ =====
   const API_BASE_URL = 'https://tendo-server-production.up.railway.app';
+  const GOOGLE_CLIENT_ID = '263876424532-eeb0f3e69ofo9tu1vblu0u4g38eme4d6.apps.googleusercontent.com';
+
+  function signInWithGoogle() {
+    if (typeof google === 'undefined' || !google.accounts) {
+      alert('Google ещё загружается, попробуй через секунду.');
+      return;
+    }
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential
+    });
+    google.accounts.id.prompt();
+  }
+
+  async function handleGoogleCredential(response) {
+    try {
+      const data = await apiFetch('/auth/google', {
+        method: 'POST',
+        body: JSON.stringify({ idToken: response.credential, language: currentLang })
+      });
+      sessionToken = data.sessionToken;
+      localStorage.setItem('tendo_session_token', sessionToken);
+      if (data.user && data.user.name) {
+        ownerProfile.name = data.user.name;
+        document.getElementById('ownerNameInput').value = data.user.name;
+      }
+      setServerStatus(true);
+      await loadCircleFromServer();
+      alert('Вход через Google выполнен ✓');
+    } catch (err) {
+      console.warn('Ошибка входа через Google:', err.message);
+      alert('Не удалось войти через Google, попробуй ещё раз.');
+    }
+  }
   let sessionToken = localStorage.getItem('tendo_session_token');
   let serverConnected = false;
 
@@ -1766,6 +1820,13 @@
     if (activeChip) p.relation = activeChip.dataset.rel;
     rebuildCircle();
     openPerson(key);
+
+    if (serverConnected && p.serverId) {
+      apiFetch('/circle/' + p.serverId, {
+        method: 'PUT',
+        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, priority: p.priorityTag })
+      }).catch(err => console.warn('Не удалось сохранить изменения на сервере:', err.message));
+    }
   }
 
   const helperTemplates = {
@@ -1816,6 +1877,12 @@
       navigator.clipboard.writeText(email).then(showConfirm).catch(showConfirm);
     } else {
       showConfirm();
+    }
+    if (serverConnected) {
+      apiFetch('/support-tickets', {
+        method: 'POST',
+        body: JSON.stringify({ message: 'Пользователь открыл контакт поддержки из приложения (' + ownerProfile.name + ')' })
+      }).catch(err => console.warn('Не удалось зарегистрировать обращение на сервере:', err.message));
     }
   }
 
