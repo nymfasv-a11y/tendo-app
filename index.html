@@ -1491,6 +1491,16 @@
 
   async function bootstrapServerSession() {
     try {
+      if (sessionToken) {
+        // Проверяем, что сохранённый токен всё ещё действителен на сервере
+        try {
+          await apiFetch('/circle');
+        } catch (checkErr) {
+          // Токен устарел (например, сервер обновлялся) — забываем его и входим заново
+          sessionToken = null;
+          localStorage.removeItem('tendo_session_token');
+        }
+      }
       if (!sessionToken) {
         // Постоянный тестовый идентификатор устройства — реальная версия заменит
         // это настоящим Google-входом (сейчас на сервере это временная заглушка).
