@@ -1553,9 +1553,22 @@
       }
       setServerStatus(true);
       await loadCircleFromServer();
+      await loadArchiveState();
     } catch (err) {
       console.warn('Сервер недоступен, приложение работает в демо-режиме:', err.message);
       setServerStatus(false);
+    }
+  }
+
+  async function loadArchiveState() {
+    try {
+      const data = await apiFetch('/me');
+      if (data.user && data.user.archived_until) {
+        archiveUntil = new Date(data.user.archived_until);
+        rebuildCircle();
+      }
+    } catch (err) {
+      console.warn('Не удалось загрузить состояние архива:', err.message);
     }
   }
 
