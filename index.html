@@ -221,9 +221,13 @@
       <div class="empty-advice" style="text-align:left;color:#e5e0ef;line-height:1.6;padding-bottom:18px" data-i18n="consentBody">
         Tendo хранит только то, что ты сам вводишь — о себе и о близких. Мы не собираем геолокацию, не читаем контакты и переписки, не продаём данные третьим лицам. Полный текст — в Политике конфиденциальности.
       </div>
-      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:24px">
-        <input type="checkbox" id="consentCheckbox" onchange="document.getElementById('consentContinueBtn').disabled = !this.checked" style="width:20px;height:20px;margin-top:2px;accent-color:var(--wave);flex-shrink:0" />
+      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:14px">
+        <input type="checkbox" id="consentCheckbox" onchange="updateConsentButton()" style="width:20px;height:20px;margin-top:2px;accent-color:var(--wave);flex-shrink:0" />
         <span style="font-size:12.5px;color:var(--text-dim);line-height:1.5"><span data-i18n="consentCheckboxLabel">Я прочитал(а) и согласен(на) с</span> <a href="#" onclick="event.preventDefault();showScreen('privacy-policy')" style="color:var(--wave);text-decoration:underline" data-i18n="consentPolicyLink">Политикой конфиденциальности</a></span>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:24px">
+        <input type="checkbox" id="consentAgeCheckbox" onchange="updateConsentButton()" style="width:20px;height:20px;margin-top:2px;accent-color:var(--wave);flex-shrink:0" />
+        <span style="font-size:12.5px;color:var(--text-dim);line-height:1.5" data-i18n="consentAgeLabel">Мне есть 18 лет</span>
       </label>
       <button class="save-btn" id="consentContinueBtn" disabled onclick="giveConsent()" data-i18n="consentContinue" style="opacity:1">Продолжить</button>
     </div>
@@ -439,6 +443,16 @@
         <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0012 23z"/><path fill="#fff" d="M5.84 14.09A6.6 6.6 0 015.5 12c0-.73.12-1.43.34-2.09V7.07H2.18A11 11 0 001 12c0 1.77.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 00-9.82 6.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         <span data-i18n="signInGoogle">Войти через Google</span>
       </button>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="section-title" data-i18n="myWaveTitle">Моя Wave</span></div>
+      <div class="empty-advice" style="text-align:left;padding-bottom:10px" data-i18n="myWaveDesc">Отметь, как ты сегодня — люди, у кого ты в круге, увидят это.</div>
+      <div style="display:flex;gap:10px">
+        <button class="save-btn" style="flex:1;background:rgba(240,169,78,0.15);color:var(--priority);box-shadow:none" onclick="markMyWave('gentle')" data-i18n="waveGentleBtn">🕊 Помягче со мной</button>
+        <button class="save-btn" style="flex:1;background:rgba(90,200,140,0.15);color:var(--green);box-shadow:none" onclick="markMyWave('great')" data-i18n="waveGreatBtn">☀️ Всё супер</button>
+      </div>
+      <div id="myWaveStatus" style="text-align:center;font-size:11.5px;color:var(--text-faint);padding-top:10px"></div>
     </div>
 
     <div class="section">
@@ -857,6 +871,9 @@
       aboutOf: "О ", aboutOfHer: "ней", aboutLikes: "Любит", aboutRemember: "Что стоит помнить", nothingAdded: "Пока ничего не добавлено.",
       aboutPrivacy: (name) => `Это твои заметки. Если ${name} сама зарегистрируется в Tendo — её собственные слова о себе будут в приоритете.`,
       wishlistFor: "идеи подарков для ", wishlistEmpty: "Пока пусто. Можно добавить идею, когда она появится.",
+      wishlistAddPh: "например, кружка ручной работы", wishlistAddBtn: "Добавить идею",
+      datesAddLabelPh: "например, годовщина", datesAddValuePh: "например, 3 сентября", datesAddBtn: "Добавить дату",
+      historyAddPh: "что произошло, что стоит запомнить", historyAddBtn: "Добавить запись",
       datesFor: "важные даты — ", datesEmpty: "Пока даты не добавлены.", birthdayLabel: "День рождения",
       historyFor: "что уже было — ", historyEmpty: "История пока пуста.<br>Здесь появится то, что уже было сделано.",
       editPhotoHint: "Нажми, чтобы изменить фото", editSave: "Сохранить изменения",
@@ -877,7 +894,7 @@
       archivedBannerTitle: "Данные в архиве", archivedBannerDesc: (date) => `Круг скрыт до ${date}. Ничего не удалено — открой приложение снова, и всё будет на месте.`,
       restoreNow: "Восстановить сейчас",
       pauseOrDelete: "Удалить / Пауза", deleteSectionTitle: "Удалить безвозвратно", deleteSectionDesc: "Все данные удалятся навсегда. Это нельзя отменить.",
-      deleteForeverStep1: "Удалить всё безвозвратно", deleteForeverStep2: "Точно? Нажми ещё раз, чтобы удалить",
+      deleteForeverStep1: "Удалить всё безвозвратно", deleteForeverStep2: "Точно? Нажми ещё раз, чтобы удалить", deletePersonBtn: "Удалить этого человека", deletePersonConfirm: "Точно? Нажми ещё раз",
       langSection: "Язык",
       profileTitle: "Профиль", profileSub: "твои личные данные", ownerRole: "Владелец круга",
       aboutMe: "О себе", aboutMePh: "например, люблю дарить сюрпризы, но плохо помню даты",
@@ -888,9 +905,11 @@
       serverConnected: "Подключено к серверу", serverOffline: "Демо-режим (сервер недоступен)",
       aboutMeHelper: "Это может использовать AI-хелпер, когда подсказывает, как лучше сформулировать сообщение от твоего имени.",
       circleSection: "Круг", circleSizeText: (n) => `В твоём круге — ${n} человек`,
+      myWaveTitle: "Моя Wave", myWaveDesc: "Отметь, как ты сегодня — люди, у кого ты в круге, увидят это.", waveGentleBtn: "🕊 Помягче со мной", waveGreatBtn: "Всё супер",
+      waveOfflineNote: "Нет связи с сервером — попробуй позже", waveSavedNote: "Сохранено ✓", waveErrorNote: "Не удалось сохранить, попробуй ещё раз",
       noAccountWarningTitle: "Данные хранятся только на этом телефоне", noAccountWarningDesc: "Без входа в аккаунт данные будут потеряны при смене телефона или удалении приложения. Зарегистрироваться можно в любой момент.", signInGoogle: "Войти через Google",
       consentTitle: "Прежде чем начать", consentBody: "Tendo хранит только то, что ты сам вводишь — о себе и о близких. Мы не собираем геолокацию, не читаем контакты и переписки, не продаём данные третьим лицам. Полный текст — в Политике конфиденциальности.",
-      consentCheckboxLabel: "Я прочитал(а) и согласен(на) с", consentPolicyLink: "Политикой конфиденциальности", consentContinue: "Продолжить",
+      consentCheckboxLabel: "Я прочитал(а) и согласен(на) с", consentPolicyLink: "Политикой конфиденциальности", consentContinue: "Продолжить", consentAgeLabel: "Мне есть 18 лет",
       draftWarm: (name, occasion) => `${name}, думаю о тебе. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, просто хотел написать — ты важна для меня. Если что, я рядом сегодня.`,
       draftLight: (name) => `Эй, ${name}! Как ты сегодня? Если что — я на связи.`,
@@ -940,6 +959,9 @@
       aboutOf: "Про ", aboutOfHer: "неї", aboutLikes: "Любить", aboutRemember: "Що варто пам'ятати", nothingAdded: "Поки нічого не додано.",
       aboutPrivacy: (name) => `Це твої нотатки. Якщо ${name} сама зареєструється в Tendo — її власні слова про себе матимуть пріоритет.`,
       wishlistFor: "ідеї подарунків для ", wishlistEmpty: "Поки порожньо. Можна додати ідею, коли вона з'явиться.",
+      wishlistAddPh: "наприклад, чашка ручної роботи", wishlistAddBtn: "Додати ідею",
+      datesAddLabelPh: "наприклад, річниця", datesAddValuePh: "наприклад, 3 вересня", datesAddBtn: "Додати дату",
+      historyAddPh: "що сталося, що варто запам'ятати", historyAddBtn: "Додати запис",
       datesFor: "важливі дати — ", datesEmpty: "Поки дати не додано.", birthdayLabel: "День народження",
       historyFor: "що вже було — ", historyEmpty: "Історія поки порожня.<br>Тут з'явиться те, що вже було зроблено.",
       editPhotoHint: "Натисни, щоб змінити фото", editSave: "Зберегти зміни",
@@ -960,7 +982,7 @@
       archivedBannerTitle: "Дані в архіві", archivedBannerDesc: (date) => `Коло сховано до ${date}. Нічого не видалено — відкрий застосунок знову, і все буде на місці.`,
       restoreNow: "Відновити зараз",
       pauseOrDelete: "Видалити / Пауза", deleteSectionTitle: "Видалити безповоротно", deleteSectionDesc: "Усі дані видаляться назавжди. Це не можна скасувати.",
-      deleteForeverStep1: "Видалити все безповоротно", deleteForeverStep2: "Точно? Натисни ще раз, щоб видалити",
+      deleteForeverStep1: "Видалити все безповоротно", deleteForeverStep2: "Точно? Натисни ще раз, щоб видалити", deletePersonBtn: "Видалити цю людину", deletePersonConfirm: "Точно? Натисни ще раз",
       langSection: "Мова",
       profileTitle: "Профіль", profileSub: "твої особисті дані", ownerRole: "Власник кола",
       aboutMe: "Про себе", aboutMePh: "наприклад, люблю дарувати сюрпризи, але погано пам'ятаю дати",
@@ -971,9 +993,11 @@
       serverConnected: "Підключено до сервера", serverOffline: "Демо-режим (сервер недоступний)",
       aboutMeHelper: "Це може використовувати AI-помічник, коли підказує, як краще сформулювати повідомлення від твого імені.",
       circleSection: "Коло", circleSizeText: (n) => `У твоєму колі — ${n} людей`,
+      myWaveTitle: "Моя Wave", myWaveDesc: "Познач, як ти сьогодні — люди, у кого ти в колі, побачать це.", waveGentleBtn: "🕊 М'якіше зі мною", waveGreatBtn: "Все супер",
+      waveOfflineNote: "Немає зв'язку з сервером — спробуй пізніше", waveSavedNote: "Збережено ✓", waveErrorNote: "Не вдалося зберегти, спробуй ще раз",
       noAccountWarningTitle: "Дані зберігаються лише на цьому телефоні", noAccountWarningDesc: "Без входу в акаунт дані буде втрачено при зміні телефону або видаленні застосунку. Зареєструватися можна будь-коли.", signInGoogle: "Увійти через Google",
       consentTitle: "Перш ніж почати", consentBody: "Tendo зберігає лише те, що ти сам вводиш — про себе та близьких. Ми не збираємо геолокацію, не читаємо контакти й переписки, не продаємо дані третім особам. Повний текст — у Політиці конфіденційності.",
-      consentCheckboxLabel: "Я прочитав(ла) і погоджуюсь з", consentPolicyLink: "Політикою конфіденційності", consentContinue: "Продовжити",
+      consentCheckboxLabel: "Я прочитав(ла) і погоджуюсь з", consentPolicyLink: "Політикою конфіденційності", consentContinue: "Продовжити", consentAgeLabel: "Мені є 18 років",
       draftWarm: (name, occasion) => `${name}, думаю про тебе. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, просто хотів написати — ти важлива для мене. Якщо що, я поруч сьогодні.`,
       draftLight: (name) => `Гей, ${name}! Як ти сьогодні? Якщо що — я на звязку.`,
@@ -1023,6 +1047,9 @@
       aboutOf: "About ", aboutOfHer: "her", aboutLikes: "Likes", aboutRemember: "Worth remembering", nothingAdded: "Nothing added yet.",
       aboutPrivacy: (name) => `These are your own notes. If ${name} signs up for Tendo herself, her own words about herself will take priority.`,
       wishlistFor: "gift ideas for ", wishlistEmpty: "Empty for now. Add an idea whenever one comes up.",
+      wishlistAddPh: "e.g. a handmade mug", wishlistAddBtn: "Add idea",
+      datesAddLabelPh: "e.g. anniversary", datesAddValuePh: "e.g. September 3", datesAddBtn: "Add date",
+      historyAddPh: "what happened, worth remembering", historyAddBtn: "Add note",
       datesFor: "important dates — ", datesEmpty: "No dates added yet.", birthdayLabel: "Birthday",
       historyFor: "what's happened so far — ", historyEmpty: "History is empty for now.<br>What's already been done will appear here.",
       editPhotoHint: "Tap to change photo", editSave: "Save changes",
@@ -1043,7 +1070,7 @@
       archivedBannerTitle: "Data archived", archivedBannerDesc: (date) => `Your circle is hidden until ${date}. Nothing was deleted — open the app again and it will all be there.`,
       restoreNow: "Restore now",
       pauseOrDelete: "Delete / Pause", deleteSectionTitle: "Delete permanently", deleteSectionDesc: "All data will be deleted forever. This cannot be undone.",
-      deleteForeverStep1: "Delete everything permanently", deleteForeverStep2: "Are you sure? Tap again to delete",
+      deleteForeverStep1: "Delete everything permanently", deleteForeverStep2: "Are you sure? Tap again to delete", deletePersonBtn: "Delete this person", deletePersonConfirm: "Are you sure? Tap again",
       langSection: "Language",
       profileTitle: "Profile", profileSub: "your personal info", ownerRole: "Circle owner",
       aboutMe: "About me", aboutMePh: "e.g. I love giving surprises but I'm bad with dates",
@@ -1054,9 +1081,11 @@
       serverConnected: "Connected to server", serverOffline: "Demo mode (server unavailable)",
       aboutMeHelper: "The AI helper can use this when suggesting how to phrase a message in your voice.",
       circleSection: "Circle", circleSizeText: (n) => `Your circle — ${n} people`,
+      myWaveTitle: "My Wave", myWaveDesc: "Mark how you are today — people who have you in their circle will see this.", waveGentleBtn: "🕊 Be gentle with me", waveGreatBtn: "All good",
+      waveOfflineNote: "No connection to server — try later", waveSavedNote: "Saved ✓", waveErrorNote: "Could not save, try again",
       noAccountWarningTitle: "Data is stored only on this phone", noAccountWarningDesc: "Without signing in, your data will be lost if you change phones or delete the app. You can sign in anytime.", signInGoogle: "Sign in with Google",
       consentTitle: "Before we start", consentBody: "Tendo only stores what you enter yourself, about you and the people close to you. We do not collect location, read your contacts or messages, or sell data to third parties. Full text in the Privacy Policy.",
-      consentCheckboxLabel: "I have read and agree to the", consentPolicyLink: "Privacy Policy", consentContinue: "Continue",
+      consentCheckboxLabel: "I have read and agree to the", consentPolicyLink: "Privacy Policy", consentContinue: "Continue", consentAgeLabel: "I am 18 years or older",
       draftWarm: (name, occasion) => `${name}, been thinking about you. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, just wanted to say you matter to me. I am here today if you need anything.`,
       draftLight: (name) => `Hey ${name}! How are you today? Let me know if you need anything.`,
@@ -1106,6 +1135,9 @@
       aboutOf: "Despre ", aboutOfHer: "ea", aboutLikes: "Îi place", aboutRemember: "Merită reținut", nothingAdded: "Nimic adăugat încă.",
       aboutPrivacy: (name) => `Acestea sunt notițele tale. Dacă ${name} se înregistrează singură pe Tendo, cuvintele ei proprii despre sine vor avea prioritate.`,
       wishlistFor: "idei de cadouri pentru ", wishlistEmpty: "Momentan gol. Poți adăuga o idee oricând apare una.",
+      wishlistAddPh: "de ex. o cana facuta manual", wishlistAddBtn: "Adauga idee",
+      datesAddLabelPh: "de ex. aniversare", datesAddValuePh: "de ex. 3 septembrie", datesAddBtn: "Adauga data",
+      historyAddPh: "ce s-a intamplat, merita retinut", historyAddBtn: "Adauga notita",
       datesFor: "date importante — ", datesEmpty: "Nu sunt date adăugate încă.", birthdayLabel: "Ziua de naștere",
       historyFor: "ce s-a întâmplat până acum — ", historyEmpty: "Istoricul e gol deocamdată.<br>Aici va apărea ce s-a făcut deja.",
       editPhotoHint: "Atinge pentru a schimba poza", editSave: "Salvează modificările",
@@ -1126,7 +1158,7 @@
       archivedBannerTitle: "Date arhivate", archivedBannerDesc: (date) => `Cercul e ascuns pana la ${date}. Nimic nu a fost sters - deschide aplicatia din nou si totul va fi acolo.`,
       restoreNow: "Restaureaza acum",
       pauseOrDelete: "Sterge / Pauza", deleteSectionTitle: "Sterge definitiv", deleteSectionDesc: "Toate datele vor fi sterse definitiv. Aceasta actiune nu poate fi anulata.",
-      deleteForeverStep1: "Sterge tot definitiv", deleteForeverStep2: "Esti sigur? Apasa din nou pentru a sterge",
+      deleteForeverStep1: "Sterge tot definitiv", deleteForeverStep2: "Esti sigur? Apasa din nou pentru a sterge", deletePersonBtn: "Sterge aceasta persoana", deletePersonConfirm: "Esti sigur? Apasa din nou",
       langSection: "Limbă",
       profileTitle: "Profil", profileSub: "datele tale personale", ownerRole: "Proprietarul cercului",
       aboutMe: "Despre mine", aboutMePh: "de ex. îmi place să fac surprize, dar țin minte greu datele",
@@ -1137,9 +1169,11 @@
       serverConnected: "Conectat la server", serverOffline: "Mod demo (server indisponibil)",
       aboutMeHelper: "Asistentul AI poate folosi asta când sugerează cum să formulezi un mesaj în numele tău.",
       circleSection: "Cerc", circleSizeText: (n) => `În cercul tău — ${n} persoane`,
+      myWaveTitle: "Wave-ul meu", myWaveDesc: "Marcheaza cum esti azi - oamenii care te au in cercul lor vor vedea asta.", waveGentleBtn: "🕊 Fii blând cu mine", waveGreatBtn: "Totul e bine",
+      waveOfflineNote: "Fara conexiune la server - incearca mai tarziu", waveSavedNote: "Salvat ✓", waveErrorNote: "Nu s-a putut salva, incearca din nou",
       noAccountWarningTitle: "Datele sunt stocate doar pe acest telefon", noAccountWarningDesc: "Fara autentificare, datele se vor pierde daca schimbi telefonul sau stergi aplicatia. Te poti autentifica oricand.", signInGoogle: "Autentificare cu Google",
       consentTitle: "Inainte sa incepem", consentBody: "Tendo stocheaza doar ce introduci tu insuti, despre tine si cei apropiati. Nu colectam locatia, nu citim contactele sau mesajele, nu vindem date tertilor. Text complet in Politica de confidentialitate.",
-      consentCheckboxLabel: "Am citit si sunt de acord cu", consentPolicyLink: "Politica de confidentialitate", consentContinue: "Continua",
+      consentCheckboxLabel: "Am citit si sunt de acord cu", consentPolicyLink: "Politica de confidentialitate", consentContinue: "Continua", consentAgeLabel: "Am 18 ani sau mai mult",
       draftWarm: (name, occasion) => `${name}, mă gândeam la tine. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, voiam doar sa-ti spun ca contezi pentru mine. Sunt aici azi daca ai nevoie de ceva.`,
       draftLight: (name) => `Hei, ${name}! Ce mai faci azi? Anunta-ma daca ai nevoie de ceva.`,
@@ -1536,7 +1570,7 @@
               name: p.name, relation: p.relation || 'regular', angle: 0, type: 'regular',
               badge: null, colors, waveText: null, priorityTag: !!p.priority,
               photoDataUrl: p.photo_url || null, likes: p.likes || '', remember: p.remember || '',
-              wishlist: [], extraDates: [], history: [], advice: [], serverId: p.id
+              wishlist: p.wishlist || [], extraDates: p.dates || [], history: p.history || [], advice: [], serverId: p.id
             };
           }
         });
@@ -1547,9 +1581,32 @@
     }
   }
 
+  async function markMyWave(moodKey) {
+    const statusEl = document.getElementById('myWaveStatus');
+    if (!serverConnected) {
+      statusEl.textContent = T('waveOfflineNote');
+      return;
+    }
+    try {
+      await apiFetch('/me/wave', { method: 'POST', body: JSON.stringify({ mood_key: moodKey }) });
+      statusEl.textContent = T('waveSavedNote');
+      statusEl.style.color = 'var(--green)';
+      setTimeout(() => { statusEl.textContent = ''; statusEl.style.color = ''; }, 3000);
+    } catch (err) {
+      statusEl.textContent = T('waveErrorNote');
+      console.warn('Не удалось сохранить Wave:', err.message);
+    }
+  }
+
   async function saveConsentToServer() {
     try { await apiFetch('/auth/consent', { method: 'POST' }); }
     catch (err) { console.warn('Не удалось сохранить согласие на сервере:', err.message); }
+  }
+
+  function updateConsentButton() {
+    const policyChecked = document.getElementById('consentCheckbox').checked;
+    const ageChecked = document.getElementById('consentAgeCheckbox').checked;
+    document.getElementById('consentContinueBtn').disabled = !(policyChecked && ageChecked);
   }
 
   function giveConsent() {
@@ -1626,10 +1683,11 @@
     const likes = document.getElementById('newLikes').value;
     const remember = document.getElementById('newRemember').value;
     const priorityTag = document.getElementById('newPriority').checked;
+    const photoToSave = pendingNewPhoto;
     const key = 'p_' + Date.now();
     const colors = colorPool[Object.keys(people).length % colorPool.length];
     people[key] = { name, relation, angle: 0, type: 'regular', badge: null, colors, waveText: null, priorityTag,
-      photoDataUrl: pendingNewPhoto, likes, remember, wishlist: [], extraDates: [], history: [], advice: [] };
+      photoDataUrl: photoToSave, likes, remember, wishlist: [], extraDates: [], history: [], advice: [] };
     document.getElementById('newName').value = '';
     document.getElementById('newLikes').value = '';
     document.getElementById('newBirthday').value = '';
@@ -1646,7 +1704,7 @@
     if (serverConnected) {
       apiFetch('/circle', {
         method: 'POST',
-        body: JSON.stringify({ name, relation, likes, remember, priority: priorityTag })
+        body: JSON.stringify({ name, relation, likes, remember, priority: priorityTag, photo_url: photoToSave, wishlist: [], dates: [], history: [] })
       }).then(data => {
         if (data.person) people[key].serverId = data.person.id;
       }).catch(err => console.warn('Не удалось сохранить человека на сервере:', err.message));
@@ -1711,10 +1769,29 @@
     const p = people[key];
     document.getElementById('wishSub').textContent = T('wishlistFor') + p.name;
     document.getElementById('wishBack').onclick = () => openPerson(key);
-    document.getElementById('wishContent').innerHTML = p.wishlist.length > 0
+    const list = p.wishlist.length > 0
       ? `<div class="section">${p.wishlist.map(w => `<div class="advice-item"><div class="advice-icon">🎁</div><div class="advice-text">${w}</div></div>`).join('')}</div>`
       : `<div class="section"><div class="empty-advice">${T('wishlistEmpty')}</div></div>`;
+    document.getElementById('wishContent').innerHTML = list + `
+      <div class="field" style="padding:0 22px">
+        <input class="field-input" id="newWishItem" placeholder="${T('wishlistAddPh')}" />
+      </div>
+      <div class="save-bar" style="position:static;padding:10px 22px 20px"><button class="save-btn" onclick="addWishlistItem('${key}')">${T('wishlistAddBtn')}</button></div>
+    `;
     showScreen('wishlist');
+  }
+
+  function addWishlistItem(key) {
+    const input = document.getElementById('newWishItem');
+    const text = input.value.trim();
+    if (!text) return;
+    const p = people[key];
+    p.wishlist.push(text);
+    if (serverConnected && p.serverId) {
+      apiFetch('/circle/' + p.serverId, { method: 'PUT', body: JSON.stringify({ wishlist: p.wishlist }) })
+        .catch(err => console.warn('Не удалось сохранить wishlist:', err.message));
+    }
+    openWishlist(key);
   }
 
   function openDates(key) {
@@ -1724,20 +1801,57 @@
     const rows = [];
     if (p.birthdayInDays) rows.push({ label: T('birthdayLabel'), date: p.birthdayDate });
     (p.extraDates || []).forEach(d => rows.push(d));
-    document.getElementById('datesContent').innerHTML = rows.length > 0
+    const list = rows.length > 0
       ? `<div class="section">${rows.map(d => `<div class="advice-item"><div class="advice-icon">🎂</div><div class="advice-text"><b>${d.label}</b><br>${d.date}</div></div>`).join('')}</div>`
       : `<div class="section"><div class="empty-advice">${T('datesEmpty')}</div></div>`;
+    document.getElementById('datesContent').innerHTML = list + `
+      <div class="field" style="padding:0 22px"><input class="field-input" id="newDateLabel" placeholder="${T('datesAddLabelPh')}" /></div>
+      <div class="field" style="padding:0 22px"><input class="field-input" id="newDateValue" placeholder="${T('datesAddValuePh')}" /></div>
+      <div class="save-bar" style="position:static;padding:10px 22px 20px"><button class="save-btn" onclick="addDateItem('${key}')">${T('datesAddBtn')}</button></div>
+    `;
     showScreen('dates');
+  }
+
+  function addDateItem(key) {
+    const label = document.getElementById('newDateLabel').value.trim();
+    const value = document.getElementById('newDateValue').value.trim();
+    if (!label || !value) return;
+    const p = people[key];
+    p.extraDates = p.extraDates || [];
+    p.extraDates.push({ label, date: value });
+    if (serverConnected && p.serverId) {
+      apiFetch('/circle/' + p.serverId, { method: 'PUT', body: JSON.stringify({ dates: p.extraDates }) })
+        .catch(err => console.warn('Не удалось сохранить дату:', err.message));
+    }
+    openDates(key);
   }
 
   function openHistory(key) {
     const p = people[key];
     document.getElementById('historySub').textContent = T('historyFor') + p.name;
     document.getElementById('historyBack').onclick = () => openPerson(key);
-    document.getElementById('historyContent').innerHTML = (p.history && p.history.length > 0)
+    const list = (p.history && p.history.length > 0)
       ? `<div class="section">${p.history.map(h => `<div class="advice-item"><div class="advice-icon">🕓</div><div class="advice-text"><b>${h.date}</b><br>${h.text}</div></div>`).join('')}</div>`
       : `<div class="section"><div class="empty-advice">${T('historyEmpty')}</div></div>`;
+    document.getElementById('historyContent').innerHTML = list + `
+      <div class="field" style="padding:0 22px"><textarea class="field-input" id="newHistoryText" placeholder="${T('historyAddPh')}"></textarea></div>
+      <div class="save-bar" style="position:static;padding:10px 22px 20px"><button class="save-btn" onclick="addHistoryItem('${key}')">${T('historyAddBtn')}</button></div>
+    `;
     showScreen('history');
+  }
+
+  function addHistoryItem(key) {
+    const text = document.getElementById('newHistoryText').value.trim();
+    if (!text) return;
+    const p = people[key];
+    p.history = p.history || [];
+    const dateLabel = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    p.history.unshift({ date: dateLabel, text });
+    if (serverConnected && p.serverId) {
+      apiFetch('/circle/' + p.serverId, { method: 'PUT', body: JSON.stringify({ history: p.history }) })
+        .catch(err => console.warn('Не удалось сохранить историю:', err.message));
+    }
+    openHistory(key);
   }
 
   function openInvite() {
@@ -1816,8 +1930,37 @@
         <label class="switch"><input type="checkbox" id="editPriority" ${p.priorityTag ? 'checked' : ''}><span class="switch-track"></span></label>
       </div>
       <div class="save-bar"><button class="save-btn" onclick="saveEdit('${key}')">${T('editSave')}</button></div>
+      <div style="padding:14px 22px 22px"><button class="save-btn" style="background:rgba(226,75,74,0.12);color:#e2504a;box-shadow:none" onclick="deletePersonConfirm('${key}')">${T('deletePersonBtn')}</button></div>
     `;
     showScreen('edit');
+  }
+
+  let deletePersonPending = null;
+
+  function deletePersonConfirm(key) {
+    const btn = document.querySelector(`[onclick="deletePersonConfirm('${key}')"]`);
+    if (deletePersonPending !== key) {
+      deletePersonPending = key;
+      btn.textContent = T('deletePersonConfirm');
+      setTimeout(() => {
+        if (deletePersonPending === key) {
+          deletePersonPending = null;
+          btn.textContent = T('deletePersonBtn');
+        }
+      }, 4000);
+    } else {
+      deletePersonPending = null;
+      const p = people[key];
+      const serverId = p.serverId;
+      delete people[key];
+      rebuildCircle();
+      showScreen('circle');
+
+      if (serverConnected && serverId) {
+        apiFetch('/circle/' + serverId, { method: 'DELETE' })
+          .catch(err => console.warn('Не удалось удалить человека на сервере:', err.message));
+      }
+    }
   }
 
   function saveEdit(key) {
@@ -1834,7 +1977,7 @@
     if (serverConnected && p.serverId) {
       apiFetch('/circle/' + p.serverId, {
         method: 'PUT',
-        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, priority: p.priorityTag })
+        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, priority: p.priorityTag, photo_url: p.photoDataUrl })
       }).catch(err => console.warn('Не удалось сохранить изменения на сервере:', err.message));
     }
   }
@@ -1897,11 +2040,19 @@
   }
 
   function sendSuggestion() {
+    const textEl = document.getElementById('suggestText');
+    const text = textEl.value.trim();
+    if (!text) return;
     const btn = document.querySelector('#screen-suggest .save-btn');
     const original = btn.textContent;
     btn.textContent = T('suggestThanks');
+    if (serverConnected) {
+      apiFetch('/suggestions', { method: 'POST', body: JSON.stringify({ text }) })
+        .catch(err => console.warn('Не удалось отправить предложение на сервер:', err.message));
+    }
     setTimeout(() => {
       btn.textContent = original;
+      textEl.value = '';
       showScreen('circle');
     }, 1400);
   }
@@ -1931,11 +2082,21 @@
     archiveUntil = d;
     rebuildCircle();
     showScreen('circle');
+
+    if (serverConnected) {
+      apiFetch('/me/archive', { method: 'PUT', body: JSON.stringify({ archived_until: d.toISOString() }) })
+        .catch(err => console.warn('Не удалось сохранить архив на сервере:', err.message));
+    }
   }
 
   function restoreFromArchive() {
     archiveUntil = null;
     rebuildCircle();
+
+    if (serverConnected) {
+      apiFetch('/me/archive', { method: 'PUT', body: JSON.stringify({ archived_until: null }) })
+        .catch(err => console.warn('Не удалось снять архив на сервере:', err.message));
+    }
   }
 
   let deleteConfirmPending = false;
@@ -1957,6 +2118,11 @@
       archiveUntil = null;
       rebuildCircle();
       showScreen('circle');
+
+      if (serverConnected) {
+        apiFetch('/circle', { method: 'DELETE' })
+          .catch(err => console.warn('Не удалось удалить круг на сервере:', err.message));
+      }
     }
   }
 
