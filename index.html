@@ -317,7 +317,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M9 7l1.5-2h3L15 7"/></svg>
     </div>
     <input type="file" id="newPhotoInput" accept="image/*" style="display:none" onchange="handlePhotoSelect(event, 'newPhotoUpload')" />
-    <div class="photo-hint" data-i18n-html="addPhotoHintHtml">Добавь фото — своё, ИИ-сгенерированное<br>или оставь пустым</div>
+    <div class="photo-hint" data-i18n-html="addPhotoHintHtml">Добавь фото<br>или оставь пустым</div>
     <div class="field"><label class="field-label" data-i18n="addName">Имя</label><input class="field-input" id="newName" data-i18n-ph="addNamePh" placeholder="например, Маша" /></div>
     <div class="section-label" data-i18n="addRelation">Кто она тебе</div>
     <div class="relation-row" id="newRelationRow"><div class="relation-chip active" data-rel="partner" data-i18n="relPartner">Партнёр</div><div class="relation-chip" data-rel="friend" data-i18n="relFriend">Друг</div><div class="relation-chip" data-rel="family" data-i18n="relFamily">Семья</div><div class="relation-chip" data-rel="colleague" data-i18n="relColleague">Коллега</div></div>
@@ -847,8 +847,8 @@
       noReasonSuffix: "сегодня без советов — это нормально, повода пока нет.",
       waveSignal: "Есть сигнал на сегодня", ordinaryAdvice: "Обычный совет",
       birthdayIn: (n,name) => `У ${name} день рождения через ${n} дней`,
-      addTitle: "Новый человек в круге", addPhotoHint: "Добавь фото — своё, ИИ-сгенерированное или оставь пустым",
-      addPhotoHintHtml: "Добавь фото — своё, ИИ-сгенерированное<br>или оставь пустым",
+      addTitle: "Новый человек в круге", addPhotoHint: "Добавь фото или оставь пустым",
+      addPhotoHintHtml: "Добавь фото<br>или оставь пустым",
       addName: "Имя", addNamePh: "например, Маша",
       addRelation: "Кто она тебе", relPartner: "Партнёр", relFriend: "Друг", relFamily: "Семья", relColleague: "Коллега",
       addLikes: "Любит", addLikesPh: "например, чёрный кофе без сахара, растения на подоконнике",
@@ -937,8 +937,8 @@
       noReasonSuffix: "сьогодні без порад — це нормально, приводу поки немає.",
       waveSignal: "Є сигнал на сьогодні", ordinaryAdvice: "Звичайна порада",
       birthdayIn: (n,name) => `У ${name} день народження через ${n} днів`,
-      addTitle: "Нова людина в колі", addPhotoHint: "Додай фото — своє, ШІ-згенероване або залиш порожнім",
-      addPhotoHintHtml: "Додай фото — своє, ШІ-згенероване<br>або залиш порожнім",
+      addTitle: "Нова людина в колі", addPhotoHint: "Додай фото або залиш порожнім",
+      addPhotoHintHtml: "Додай фото<br>або залиш порожнім",
       addName: "Ім'я", addNamePh: "наприклад, Маша",
       addRelation: "Хто вона тобі", relPartner: "Партнер", relFriend: "Друг", relFamily: "Родина", relColleague: "Колега",
       addLikes: "Любить", addLikesPh: "наприклад, чорну каву без цукру, рослини на підвіконні",
@@ -1027,8 +1027,8 @@
       noReasonSuffix: "have no tips today — that's normal, there's just no reason yet.",
       waveSignal: "Has a signal today", ordinaryAdvice: "Regular tip",
       birthdayIn: (n,name) => `${name}'s birthday is in ${n} days`,
-      addTitle: "New person in your circle", addPhotoHint: "Add a photo — your own, AI-generated, or leave it blank",
-      addPhotoHintHtml: "Add a photo — your own, AI-generated,<br>or leave it blank",
+      addTitle: "New person in your circle", addPhotoHint: "Add a photo or leave it blank",
+      addPhotoHintHtml: "Add a photo<br>or leave it blank",
       addName: "Name", addNamePh: "e.g. Masha",
       addRelation: "Who is she to you", relPartner: "Partner", relFriend: "Friend", relFamily: "Family", relColleague: "Colleague",
       addLikes: "Likes", addLikesPh: "e.g. black coffee, no sugar; plants on the windowsill",
@@ -1117,8 +1117,8 @@
       noReasonSuffix: "nu au sfaturi azi — e normal, pur și simplu nu există încă un motiv.",
       waveSignal: "Are un semnal azi", ordinaryAdvice: "Sfat obișnuit",
       birthdayIn: (n,name) => `${name} are ziua de naștere peste ${n} zile`,
-      addTitle: "Persoană nouă în cerc", addPhotoHint: "Adaugă o poză — a ta, generată de AI, sau las-o goală",
-      addPhotoHintHtml: "Adaugă o poză — a ta, generată de AI,<br>sau las-o goală",
+      addTitle: "Persoană nouă în cerc", addPhotoHint: "Adaugă o poză sau las-o goală",
+      addPhotoHintHtml: "Adaugă o poză<br>sau las-o goală",
       addName: "Nume", addNamePh: "de ex. Masha",
       addRelation: "Cine este ea pentru tine", relPartner: "Partener", relFriend: "Prieten", relFamily: "Familie", relColleague: "Coleg",
       addLikes: "Îi place", addLikesPh: "de ex. cafea neagră fără zahăr, plante pe pervaz",
