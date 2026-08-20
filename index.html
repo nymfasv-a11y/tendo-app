@@ -1309,6 +1309,21 @@
       Object.entries(data.fields || {}).forEach(([key, value]) => {
         if (fieldElMap[key] && value) fieldElMap[key].value = value;
       });
+      // Программное .value = ... не вызывает событие 'change', поэтому обычное
+      // автосохранение по изменению поля здесь не сработает — сохраняем явно.
+      ownerProfile.about = document.getElementById('ownerAbout').value;
+      ownerProfile.interests = document.getElementById('ownerInterests').value;
+      ownerProfile.dates = document.getElementById('ownerDates').value;
+      ownerProfile.communication = document.getElementById('ownerCommunication').value;
+      if (serverConnected) {
+        apiFetch('/me/profile', {
+          method: 'PUT',
+          body: JSON.stringify({
+            about: ownerProfile.about, interests: ownerProfile.interests,
+            important_dates: ownerProfile.dates, communication_style: ownerProfile.communication
+          })
+        }).catch(err => console.warn('Не удалось сохранить разобранный профиль на сервере:', err.message));
+      }
 
       btn.textContent = original;
       btn.disabled = false;
@@ -1762,12 +1777,13 @@
     const relation = document.querySelector('#newRelationRow .relation-chip.active').dataset.rel;
     const likes = document.getElementById('newLikes').value;
     const remember = document.getElementById('newRemember').value;
+    const birthdate = document.getElementById('newBirthday').value;
     const priorityTag = document.getElementById('newPriority').checked;
     const photoToSave = pendingNewPhoto;
     const key = 'p_' + Date.now();
     const colors = colorPool[Object.keys(people).length % colorPool.length];
     people[key] = { name, relation, angle: 0, type: 'regular', badge: null, colors, waveText: null, priorityTag,
-      photoDataUrl: photoToSave, likes, remember, wishlist: [], extraDates: [], history: [], advice: [] };
+      photoDataUrl: photoToSave, likes, remember, birthdate, wishlist: [], extraDates: [], history: [], advice: [] };
     document.getElementById('newName').value = '';
     document.getElementById('newLikes').value = '';
     document.getElementById('newBirthday').value = '';
@@ -1784,7 +1800,7 @@
     if (serverConnected) {
       apiFetch('/circle', {
         method: 'POST',
-        body: JSON.stringify({ name, relation, likes, remember, priority: priorityTag, photo_url: photoToSave, wishlist: [], dates: [], history: [] })
+        body: JSON.stringify({ name, relation, likes, remember, birthdate, priority: priorityTag, photo_url: photoToSave, wishlist: [], dates: [], history: [] })
       }).then(data => {
         if (data.person) people[key].serverId = data.person.id;
       }).catch(err => console.warn('Не удалось сохранить человека на сервере:', err.message));
@@ -2010,6 +2026,7 @@
         ${['partner','friend','family','colleague'].map(code => `<div class="relation-chip ${code===p.relation?'active':''}" data-rel="${code}" onclick="document.querySelectorAll('#editContent .relation-chip').forEach(c=>c.classList.remove('active'));this.classList.add('active')">${relLabel(code)}</div>`).join('')}
       </div>
       <div class="field" style="margin-top:22px"><label class="field-label">${T('addLikes')}</label><textarea class="field-input" id="editLikes">${p.likes || ''}</textarea></div>
+      <div class="field"><label class="field-label">${T('addBirthday')}</label><input class="field-input" id="editBirthday" placeholder="${T('addBirthdayPh')}" value="${p.birthdate || ''}" /></div>
       <div class="field"><label class="field-label">${T('addRemember')}</label><textarea class="field-input" id="editRemember">${p.remember || ''}</textarea></div>
       <div class="advice-item" style="cursor:default;margin:0 18px 14px">
         <div class="advice-icon" style="background:rgba(240,169,78,0.15)">⭐</div>
@@ -2057,6 +2074,7 @@
     p.name = document.getElementById('editName').value || p.name;
     p.likes = document.getElementById('editLikes').value;
     p.remember = document.getElementById('editRemember').value;
+    p.birthdate = document.getElementById('editBirthday').value;
     p.priorityTag = document.getElementById('editPriority').checked;
     const activeChip = document.querySelector('#editContent .relation-chip.active');
     if (activeChip) p.relation = activeChip.dataset.rel;
@@ -2075,7 +2093,7 @@
       if (serverConnected) {
         apiFetch('/circle', {
           method: 'POST',
-          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
+          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
         }).then(data => {
           if (data.person) people[newKey].serverId = data.person.id;
         }).catch(err => console.warn('Не удалось сохранить нового человека на сервере:', err.message));
@@ -2089,7 +2107,7 @@
     if (serverConnected && p.serverId) {
       apiFetch('/circle/' + p.serverId, {
         method: 'PUT',
-        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, priority: p.priorityTag, photo_url: p.photoDataUrl })
+        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, photo_url: p.photoDataUrl })
       }).catch(err => console.warn('Не удалось сохранить изменения на сервере:', err.message));
     }
   }
