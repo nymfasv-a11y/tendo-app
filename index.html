@@ -417,7 +417,10 @@
       </div>
       <input type="file" id="ownerPhotoInput" accept="image/*" style="display:none" onchange="handleOwnerPhotoSelect(event)" />
       <div class="profile-info">
-        <div class="profile-name-row"><input class="field-input" id="ownerNameInput" value="Александр" style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;padding:6px 10px;width:auto" onchange="updateOwnerName()" /></div>
+        <div class="profile-name-row" style="display:flex;flex-direction:column;align-items:flex-start;gap:8px">
+          <input class="field-input" id="ownerNameInput" value="Александр" style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;padding:6px 10px;width:auto" />
+          <button class="save-btn" id="saveNameBtn" onclick="updateOwnerName()" style="padding:6px 16px;font-size:12px;box-shadow:none" data-i18n="saveNameBtn">Сохранить имя</button>
+        </div>
         <div class="relation-label" data-i18n="ownerRole">Владелец круга</div>
       </div>
     </div>
@@ -904,7 +907,7 @@
       deleteForeverStep1: "Удалить всё безвозвратно", deleteForeverStep2: "Точно? Нажми ещё раз, чтобы удалить", deletePersonBtn: "Удалить этого человека", deletePersonConfirm: "Точно? Нажми ещё раз",
       demoPersonNote: "Это демо-пример для показа возможностей. Отредактируй карточку, чтобы заменить своим настоящим человеком, или просто убери её.", demoReplaceBtn: "Заменить своим человеком", demoDismissBtn: "Убрать",
       langSection: "Язык",
-      profileTitle: "Профиль", profileSub: "твои личные данные", ownerRole: "Владелец круга",
+      profileTitle: "Профиль", profileSub: "твои личные данные", ownerRole: "Владелец круга", saveNameBtn: "Сохранить имя",
       aboutMe: "О себе", aboutMePh: "например, люблю дарить сюрпризы, но плохо помню даты",
       aboutModeForm: "Анкета", aboutModeFree: "Общая инфа",
       aboutFieldGeneral: "О себе", aboutFieldInterests: "Интересы и увлечения", aboutFieldDates: "Важные даты", aboutFieldCommunication: "Как лучше со мной общаться",
@@ -996,7 +999,7 @@
       deleteForeverStep1: "Видалити все безповоротно", deleteForeverStep2: "Точно? Натисни ще раз, щоб видалити", deletePersonBtn: "Видалити цю людину", deletePersonConfirm: "Точно? Натисни ще раз",
       demoPersonNote: "Це демо-приклад для показу можливостей. Відредагуй картку, щоб замінити своєю справжньою людиною, або просто прибери її.", demoReplaceBtn: "Замінити своєю людиною", demoDismissBtn: "Прибрати",
       langSection: "Мова",
-      profileTitle: "Профіль", profileSub: "твої особисті дані", ownerRole: "Власник кола",
+      profileTitle: "Профіль", profileSub: "твої особисті дані", ownerRole: "Власник кола", saveNameBtn: "Зберегти ім'я",
       aboutMe: "Про себе", aboutMePh: "наприклад, люблю дарувати сюрпризи, але погано пам'ятаю дати",
       aboutModeForm: "Анкета", aboutModeFree: "Загальна інфо",
       aboutFieldGeneral: "Про себе", aboutFieldInterests: "Інтереси та захоплення", aboutFieldDates: "Важливі дати", aboutFieldCommunication: "Як краще зі мною спілкуватися",
@@ -1088,7 +1091,7 @@
       deleteForeverStep1: "Delete everything permanently", deleteForeverStep2: "Are you sure? Tap again to delete", deletePersonBtn: "Delete this person", deletePersonConfirm: "Are you sure? Tap again",
       demoPersonNote: "This is a demo example to show what's possible. Edit the card to replace it with your own real person, or just remove it.", demoReplaceBtn: "Replace with my person", demoDismissBtn: "Remove",
       langSection: "Language",
-      profileTitle: "Profile", profileSub: "your personal info", ownerRole: "Circle owner",
+      profileTitle: "Profile", profileSub: "your personal info", ownerRole: "Circle owner", saveNameBtn: "Save name",
       aboutMe: "About me", aboutMePh: "e.g. I love giving surprises but I'm bad with dates",
       aboutModeForm: "Form", aboutModeFree: "General info",
       aboutFieldGeneral: "About me", aboutFieldInterests: "Interests and hobbies", aboutFieldDates: "Important dates", aboutFieldCommunication: "How best to reach me",
@@ -1180,7 +1183,7 @@
       deleteForeverStep1: "Sterge tot definitiv", deleteForeverStep2: "Esti sigur? Apasa din nou pentru a sterge", deletePersonBtn: "Sterge aceasta persoana", deletePersonConfirm: "Esti sigur? Apasa din nou",
       demoPersonNote: "Acesta este un exemplu demo pentru a arata posibilitatile. Editeaza cartela ca sa o inlocuiesti cu propria ta persoana, sau doar elimin-o.", demoReplaceBtn: "Inlocuieste cu persoana mea", demoDismissBtn: "Elimina",
       langSection: "Limbă",
-      profileTitle: "Profil", profileSub: "datele tale personale", ownerRole: "Proprietarul cercului",
+      profileTitle: "Profil", profileSub: "datele tale personale", ownerRole: "Proprietarul cercului", saveNameBtn: "Salveaza numele",
       aboutMe: "Despre mine", aboutMePh: "de ex. îmi place să fac surprize, dar țin minte greu datele",
       aboutModeForm: "Formular", aboutModeFree: "Informatii generale",
       aboutFieldGeneral: "Despre mine", aboutFieldInterests: "Interese si hobby-uri", aboutFieldDates: "Date importante", aboutFieldCommunication: "Cum e mai bine sa comunici cu mine",
@@ -1367,12 +1370,29 @@
       upload.style.borderStyle = 'solid'; upload.style.padding = '0'; upload.style.overflow = 'hidden';
       upload.innerHTML = `<img src="${ownerProfile.photoDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
       updateHeaderAvatar();
+      if (serverConnected) {
+        apiFetch('/me/profile', { method: 'PUT', body: JSON.stringify({ photo_url: ownerProfile.photoDataUrl }) })
+          .catch(err => console.warn('Не удалось сохранить фото на сервере:', err.message));
+      }
     };
     reader.readAsDataURL(file);
   }
 
   function updateOwnerName() {
     ownerProfile.name = document.getElementById('ownerNameInput').value || 'Александр';
+    const btn = document.getElementById('saveNameBtn');
+    const original = btn.textContent;
+    if (serverConnected) {
+      apiFetch('/me/name', { method: 'PUT', body: JSON.stringify({ name: ownerProfile.name }) })
+        .then(() => {
+          btn.textContent = 'Сохранено ✓';
+          setTimeout(() => { btn.textContent = original; }, 2000);
+        })
+        .catch(err => console.warn('Не удалось сохранить имя на сервере:', err.message));
+    } else {
+      btn.textContent = 'Сохранено ✓';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    }
   }
 
   function updateHeaderAvatar() {
@@ -1620,12 +1640,47 @@
         archiveUntil = new Date(data.user.archived_until);
         rebuildCircle();
       }
+      if (data.user && data.user.name) {
+        ownerProfile.name = data.user.name;
+        const nameInput = document.getElementById('ownerNameInput');
+        if (nameInput) nameInput.value = data.user.name;
+      }
+      if (data.user && data.user.photo_url) {
+        ownerProfile.photoDataUrl = data.user.photo_url;
+        const upload = document.getElementById('ownerPhotoUpload');
+        if (upload) {
+          upload.style.borderStyle = 'solid'; upload.style.padding = '0'; upload.style.overflow = 'hidden';
+          upload.innerHTML = `<img src="${ownerProfile.photoDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+        }
+        updateHeaderAvatar();
+      }
       const privacyCheckbox = document.getElementById('togglePrivacy');
       if (privacyCheckbox && data.user) {
         privacyCheckbox.checked = !!data.user.privacy_locked;
       }
     } catch (err) {
       console.warn('Не удалось загрузить состояние аккаунта:', err.message);
+    }
+
+    try {
+      const profileData = await apiFetch('/me/profile');
+      const p = profileData.profile;
+      if (p) {
+        ownerProfile.about = p.about || '';
+        ownerProfile.interests = p.interests || '';
+        ownerProfile.dates = p.important_dates || '';
+        ownerProfile.communication = p.communication_style || '';
+        const aboutEl = document.getElementById('ownerAbout');
+        const interestsEl = document.getElementById('ownerInterests');
+        const datesEl = document.getElementById('ownerDates');
+        const commEl = document.getElementById('ownerCommunication');
+        if (aboutEl) aboutEl.value = ownerProfile.about;
+        if (interestsEl) interestsEl.value = ownerProfile.interests;
+        if (datesEl) datesEl.value = ownerProfile.dates;
+        if (commEl) commEl.value = ownerProfile.communication;
+      }
+    } catch (err) {
+      console.warn('Не удалось загрузить профиль "О себе":', err.message);
     }
   }
 
@@ -1639,7 +1694,7 @@
             people[p.id] = {
               name: p.name, relation: p.relation || 'regular', angle: 0, type: 'regular',
               badge: null, colors, waveText: null, priorityTag: !!p.priority,
-              photoDataUrl: p.photo_url || null, likes: p.likes || '', remember: p.remember || '',
+              photoDataUrl: p.photo_url || null, likes: p.likes || '', remember: p.remember || '', birthdate: p.birthdate || '',
               wishlist: p.wishlist || [], extraDates: p.dates || [], history: p.history || [], advice: [], serverId: p.id
             };
           }
