@@ -246,7 +246,7 @@
         <circle cx="152" cy="152" r="150" fill="none" stroke="rgba(120,160,255,0.75)" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round"/>
       </svg>
       <div class="orb-sparkles"><div class="spark"></div><div class="spark"></div><div class="spark"></div></div>
-      <div class="center-orb" onclick="showScreen('today')">
+      <div class="center-orb" onclick="showScreen('today'); loadDailyAdvice();">
         <div class="heart">♥</div><div class="label">Сегодня</div><div class="sub">советы для тебя</div><div class="count" id="todayCount">3</div>
       </div>
     </div>
@@ -265,7 +265,7 @@
     </div>
     <nav class="nav">
       <div class="nav-item active" onclick="showScreen('circle')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg><span data-i18n="navCircle">Круг</span></div>
-      <div class="nav-item" onclick="showScreen('today')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg><span data-i18n="navStatus">Статус</span></div>
+      <div class="nav-item" onclick="showScreen('today'); loadDailyAdvice();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg><span data-i18n="navStatus">Статус</span></div>
       <div class="nav-add-wrap">
         <div class="nav-add" onclick="openInvite()"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
         <svg class="nav-add-label" viewBox="0 0 60 16">
@@ -298,6 +298,12 @@
       <div class="icon-btn" onclick="showScreen('circle')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></div>
       <div><div class="page-title">Сегодня</div><div class="page-sub" id="todaySub">советов для твоего круга</div></div>
     </header>
+    <div id="aiDailyAdviceSection" style="display:none">
+      <div class="section" style="background:rgba(139,110,240,0.1);border-color:rgba(139,110,240,0.3);margin-bottom:14px">
+        <div class="section-head"><span class="section-title" style="color:var(--purple)">✨ <span data-i18n="aiDailyTitle">Советы от ИИ на сегодня</span></span></div>
+        <div id="aiDailyAdviceList"></div>
+      </div>
+    </div>
     <div class="filters" id="todayFilters">
       <div class="filter-chip active" data-filter="all" onclick="setTodayFilter('all')" data-i18n="filterAll">Все</div><div class="filter-chip" data-filter="wave" onclick="setTodayFilter('wave')" data-i18n="filterWaveOnly">Только Wave</div><div class="filter-chip" data-filter="priority" onclick="setTodayFilter('priority')" data-i18n="legendPriority">Приоритетный</div><div class="filter-chip" data-filter="regular" onclick="setTodayFilter('regular')" data-i18n="filterRegular">Обычные</div><div class="filter-chip" data-filter="dates" onclick="setTodayFilter('dates')" data-i18n="filterDates">Даты</div>
     </div>
@@ -875,7 +881,7 @@
       datesFor: "важные даты — ", datesEmpty: "Пока даты не добавлены.", birthdayLabel: "День рождения",
       historyFor: "что уже было — ", historyEmpty: "История пока пуста.<br>Здесь появится то, что уже было сделано.",
       editPhotoHint: "Нажми, чтобы изменить фото", editSave: "Сохранить изменения",
-      helperTitle: "Что написать", helperSub: "AI поможет сформулировать", helperFor: "для ",
+      helperTitle: "Что написать", helperSub: "Готовые заготовки для черновика", helperFor: "для ",
       helperOccasion: "Повод", toneWarm: "Тёплый", toneTender: "Нежный", toneLight: "Лёгкий",
       helperDraftLabel: "Черновик сообщения", helperCopy: "Скопировать текст", helperCopied: "Скопировано ✓",
       helperPrivacy: "Это только черновик. Ты сам решаешь, отправлять ли и что поменять.",
@@ -900,11 +906,12 @@
       aboutModeForm: "Анкета", aboutModeFree: "Общая инфа",
       aboutFieldGeneral: "О себе", aboutFieldInterests: "Интересы и увлечения", aboutFieldDates: "Важные даты", aboutFieldCommunication: "Как лучше со мной общаться",
       aboutInterestsPh: "например, книги, велосипед, кулинария", aboutDatesPh: "например, день рождения 12 марта", aboutCommunicationPh: "например, не люблю звонки без предупреждения, лучше написать",
-      aboutFreeformPh: "просто напиши о себе всё, что хочешь — а AI сам разложит это по полям анкеты", aboutParseBtn: "Разобрать с помощью AI", aboutParsing: "AI распределяет по полям...", aboutParsed: "Готово ✓ Проверь и поправь, если нужно",
+      aboutFreeformPh: "просто напиши о себе всё, что хочешь — а AI сам разложит это по полям анкеты", aboutParseBtn: "Разобрать с помощью AI", aboutParsing: "AI распределяет по полям...", aboutParsed: "Готово ✓ Проверь и поправь, если нужно", aboutParseError: "Не удалось разобрать текст, попробуй ещё раз",
       serverConnected: "Подключено к серверу", serverOffline: "Демо-режим (сервер недоступен)",
       aboutMeHelper: "Это может использовать AI-хелпер, когда подсказывает, как лучше сформулировать сообщение от твоего имени.",
       circleSection: "Круг", circleSizeText: (n) => `В твоём круге — ${n} человек`,
       myWaveTitle: "Моя Wave", myWaveDesc: "Отметь, как ты сегодня — люди, у кого ты в круге, увидят это.", waveGentleBtn: "🕊 Помягче со мной", waveGreatBtn: "Всё супер",
+      aiDailyTitle: "Советы от ИИ на сегодня", aiDailyLoading: "ИИ анализирует твой круг…",
       waveOfflineNote: "Нет связи с сервером — попробуй позже", waveSavedNote: "Сохранено ✓", waveErrorNote: "Не удалось сохранить, попробуй ещё раз",
       noAccountWarningTitle: "Данные хранятся только на этом телефоне", noAccountWarningDesc: "Без входа в аккаунт данные будут потеряны при смене телефона или удалении приложения. Зарегистрироваться можно в любой момент.", signInGoogle: "Войти через Google",
       privacyOnAlert: "Защита включена: люди, которых ты добавил(а) вручную, больше не смогут найти себя через поиск по Instagram и подтвердить связь.",
@@ -965,7 +972,7 @@
       datesFor: "важливі дати — ", datesEmpty: "Поки дати не додано.", birthdayLabel: "День народження",
       historyFor: "що вже було — ", historyEmpty: "Історія поки порожня.<br>Тут з'явиться те, що вже було зроблено.",
       editPhotoHint: "Натисни, щоб змінити фото", editSave: "Зберегти зміни",
-      helperTitle: "Що написати", helperSub: "AI допоможе сформулювати", helperFor: "для ",
+      helperTitle: "Що написати", helperSub: "Готові заготовки для чернетки", helperFor: "для ",
       helperOccasion: "Привід", toneWarm: "Теплий", toneTender: "Ніжний", toneLight: "Легкий",
       helperDraftLabel: "Чернетка повідомлення", helperCopy: "Скопіювати текст", helperCopied: "Скопійовано ✓",
       helperPrivacy: "Це лише чернетка. Ти сам вирішуєш, чи надсилати і що змінити.",
@@ -990,11 +997,12 @@
       aboutModeForm: "Анкета", aboutModeFree: "Загальна інфо",
       aboutFieldGeneral: "Про себе", aboutFieldInterests: "Інтереси та захоплення", aboutFieldDates: "Важливі дати", aboutFieldCommunication: "Як краще зі мною спілкуватися",
       aboutInterestsPh: "наприклад, книги, велосипед, кулінарія", aboutDatesPh: "наприклад, день народження 12 березня", aboutCommunicationPh: "наприклад, не люблю дзвінки без попередження, краще написати",
-      aboutFreeformPh: "просто напиши про себе все, що хочеш — а AI сам розкладе це по полях анкети", aboutParseBtn: "Розібрати за допомогою AI", aboutParsing: "AI розподіляє по полях...", aboutParsed: "Готово ✓ Перевір і виправ, якщо потрібно",
+      aboutFreeformPh: "просто напиши про себе все, що хочеш — а AI сам розкладе це по полях анкети", aboutParseBtn: "Розібрати за допомогою AI", aboutParsing: "AI розподіляє по полях...", aboutParsed: "Готово ✓ Перевір і виправ, якщо потрібно", aboutParseError: "Не вдалося розібрати текст, спробуй ще раз",
       serverConnected: "Підключено до сервера", serverOffline: "Демо-режим (сервер недоступний)",
       aboutMeHelper: "Це може використовувати AI-помічник, коли підказує, як краще сформулювати повідомлення від твого імені.",
       circleSection: "Коло", circleSizeText: (n) => `У твоєму колі — ${n} людей`,
       myWaveTitle: "Моя Wave", myWaveDesc: "Познач, як ти сьогодні — люди, у кого ти в колі, побачать це.", waveGentleBtn: "🕊 М'якіше зі мною", waveGreatBtn: "Все супер",
+      aiDailyTitle: "Поради від ІІ на сьогодні", aiDailyLoading: "ІІ аналізує твоє коло…",
       waveOfflineNote: "Немає зв'язку з сервером — спробуй пізніше", waveSavedNote: "Збережено ✓", waveErrorNote: "Не вдалося зберегти, спробуй ще раз",
       noAccountWarningTitle: "Дані зберігаються лише на цьому телефоні", noAccountWarningDesc: "Без входу в акаунт дані буде втрачено при зміні телефону або видаленні застосунку. Зареєструватися можна будь-коли.", signInGoogle: "Увійти через Google",
       privacyOnAlert: "Захист увімкнено: люди, яких ти додав(ла) вручну, більше не зможуть знайти себе через пошук за Instagram і підтвердити зв'язок.",
@@ -1055,7 +1063,7 @@
       datesFor: "important dates — ", datesEmpty: "No dates added yet.", birthdayLabel: "Birthday",
       historyFor: "what's happened so far — ", historyEmpty: "History is empty for now.<br>What's already been done will appear here.",
       editPhotoHint: "Tap to change photo", editSave: "Save changes",
-      helperTitle: "What to write", helperSub: "AI will help you phrase it", helperFor: "for ",
+      helperTitle: "What to write", helperSub: "Ready-made draft templates", helperFor: "for ",
       helperOccasion: "Occasion", toneWarm: "Warm", toneTender: "Tender", toneLight: "Light",
       helperDraftLabel: "Message draft", helperCopy: "Copy text", helperCopied: "Copied ✓",
       helperPrivacy: "This is just a draft. You decide whether to send it and what to change.",
@@ -1080,11 +1088,12 @@
       aboutModeForm: "Form", aboutModeFree: "General info",
       aboutFieldGeneral: "About me", aboutFieldInterests: "Interests and hobbies", aboutFieldDates: "Important dates", aboutFieldCommunication: "How best to reach me",
       aboutInterestsPh: "e.g. books, cycling, cooking", aboutDatesPh: "e.g. birthday March 12", aboutCommunicationPh: "e.g. I do not like calls without warning, text is better",
-      aboutFreeformPh: "just write anything about yourself, AI will sort it into the form fields", aboutParseBtn: "Sort with AI", aboutParsing: "AI is sorting into fields...", aboutParsed: "Done — review and adjust if needed",
+      aboutFreeformPh: "just write anything about yourself, AI will sort it into the form fields", aboutParseBtn: "Sort with AI", aboutParsing: "AI is sorting into fields...", aboutParsed: "Done — review and adjust if needed", aboutParseError: "Could not parse the text, please try again",
       serverConnected: "Connected to server", serverOffline: "Demo mode (server unavailable)",
       aboutMeHelper: "The AI helper can use this when suggesting how to phrase a message in your voice.",
       circleSection: "Circle", circleSizeText: (n) => `Your circle — ${n} people`,
       myWaveTitle: "My Wave", myWaveDesc: "Mark how you are today — people who have you in their circle will see this.", waveGentleBtn: "🕊 Be gentle with me", waveGreatBtn: "All good",
+      aiDailyTitle: "AI advice for today", aiDailyLoading: "AI is analyzing your circle…",
       waveOfflineNote: "No connection to server — try later", waveSavedNote: "Saved ✓", waveErrorNote: "Could not save, try again",
       noAccountWarningTitle: "Data is stored only on this phone", noAccountWarningDesc: "Without signing in, your data will be lost if you change phones or delete the app. You can sign in anytime.", signInGoogle: "Sign in with Google",
       privacyOnAlert: "Protection on: people you added manually will no longer be able to find themselves via Instagram search and confirm the link.",
@@ -1145,7 +1154,7 @@
       datesFor: "date importante — ", datesEmpty: "Nu sunt date adăugate încă.", birthdayLabel: "Ziua de naștere",
       historyFor: "ce s-a întâmplat până acum — ", historyEmpty: "Istoricul e gol deocamdată.<br>Aici va apărea ce s-a făcut deja.",
       editPhotoHint: "Atinge pentru a schimba poza", editSave: "Salvează modificările",
-      helperTitle: "Ce să scrii", helperSub: "AI te ajută să formulezi", helperFor: "pentru ",
+      helperTitle: "Ce să scrii", helperSub: "Sabloane gata pentru ciorna", helperFor: "pentru ",
       helperOccasion: "Motiv", toneWarm: "Cald", toneTender: "Tandru", toneLight: "Ușor",
       helperDraftLabel: "Ciornă mesaj", helperCopy: "Copiază textul", helperCopied: "Copiat ✓",
       helperPrivacy: "Aceasta este doar o ciornă. Tu decizi dacă o trimiți și ce schimbi.",
@@ -1170,11 +1179,12 @@
       aboutModeForm: "Formular", aboutModeFree: "Informatii generale",
       aboutFieldGeneral: "Despre mine", aboutFieldInterests: "Interese si hobby-uri", aboutFieldDates: "Date importante", aboutFieldCommunication: "Cum e mai bine sa comunici cu mine",
       aboutInterestsPh: "de ex. carti, ciclism, gatit", aboutDatesPh: "de ex. ziua de nastere 12 martie", aboutCommunicationPh: "de ex. nu-mi plac apelurile fara avertisment, mai bine scrie",
-      aboutFreeformPh: "scrie orice despre tine, AI va sorta in campurile formularului", aboutParseBtn: "Sorteaza cu AI", aboutParsing: "AI sorteaza campurile...", aboutParsed: "Gata - verifica si ajusteaza daca e nevoie",
+      aboutFreeformPh: "scrie orice despre tine, AI va sorta in campurile formularului", aboutParseBtn: "Sorteaza cu AI", aboutParsing: "AI sorteaza campurile...", aboutParsed: "Gata - verifica si ajusteaza daca e nevoie", aboutParseError: "Nu s-a putut analiza textul, incearca din nou",
       serverConnected: "Conectat la server", serverOffline: "Mod demo (server indisponibil)",
       aboutMeHelper: "Asistentul AI poate folosi asta când sugerează cum să formulezi un mesaj în numele tău.",
       circleSection: "Cerc", circleSizeText: (n) => `În cercul tău — ${n} persoane`,
       myWaveTitle: "Wave-ul meu", myWaveDesc: "Marcheaza cum esti azi - oamenii care te au in cercul lor vor vedea asta.", waveGentleBtn: "🕊 Fii blând cu mine", waveGreatBtn: "Totul e bine",
+      aiDailyTitle: "Sfaturi de la AI pentru azi", aiDailyLoading: "AI analizeaza cercul tau…",
       waveOfflineNote: "Fara conexiune la server - incearca mai tarziu", waveSavedNote: "Salvat ✓", waveErrorNote: "Nu s-a putut salva, incearca din nou",
       noAccountWarningTitle: "Datele sunt stocate doar pe acest telefon", noAccountWarningDesc: "Fara autentificare, datele se vor pierde daca schimbi telefonul sau stergi aplicatia. Te poti autentifica oricand.", signInGoogle: "Autentificare cu Google",
       privacyOnAlert: "Protectie activata: persoanele adaugate manual nu se vor mai putea gasi prin cautare Instagram si confirma legatura.",
@@ -1267,7 +1277,7 @@
     document.getElementById('aboutFreeformMode').style.display = mode === 'freeform' ? 'block' : 'none';
   }
 
-  function parseFreeformWithAI() {
+  async function parseFreeformWithAI() {
     const text = document.getElementById('ownerFreeform').value.trim();
     if (!text) return;
     const btn = document.getElementById('aiParseBtn');
@@ -1275,32 +1285,30 @@
     btn.textContent = T('aboutParsing');
     btn.disabled = true;
 
-    setTimeout(() => {
-      // Lightweight demo heuristic — real version would call an AI model.
-      // Splits the free text into sentences and routes each to the most likely field
-      // based on simple keyword matching, purely to demonstrate the concept.
-      const sentences = text.split(/(?<=[.!?])\s+|\n+/).map(s => s.trim()).filter(Boolean);
-      const buckets = { general: [], interests: [], dates: [], communication: [] };
-      const interestWords = /люблю|нравится|обожаю|увлека|хобби|interest|love|like|plac|iubesc/i;
-      const dateWords = /\d{1,2}[./\s](января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря|\d{1,2})|день рождения|birthday|дата/i;
-      const commWords = /звон|написать|сообщени|текст|call|text|message|общать|спілку|comunic/i;
+    // Список полей передаём с клиента — если в будущем добавится новое поле анкеты,
+    // достаточно добавить его сюда, без изменений на сервере.
+    const fields = [
+      { key: 'about', label: T('aboutLabel') || 'О себе' },
+      { key: 'interests', label: T('interestsLabel') || 'Интересы и увлечения' },
+      { key: 'dates', label: T('datesLabel') || 'Важные даты' },
+      { key: 'communication', label: T('communicationLabel') || 'Как лучше общаться' }
+    ];
 
-      sentences.forEach(s => {
-        if (dateWords.test(s)) buckets.dates.push(s);
-        else if (commWords.test(s)) buckets.communication.push(s);
-        else if (interestWords.test(s)) buckets.interests.push(s);
-        else buckets.general.push(s);
+    const fieldElMap = {
+      about: document.getElementById('ownerAbout'),
+      interests: document.getElementById('ownerInterests'),
+      dates: document.getElementById('ownerDates'),
+      communication: document.getElementById('ownerCommunication')
+    };
+
+    try {
+      const data = await apiFetch('/me/profile/parse-freeform', {
+        method: 'POST',
+        body: JSON.stringify({ text, fields })
       });
-
-      const genEl = document.getElementById('ownerAbout');
-      const intEl = document.getElementById('ownerInterests');
-      const datEl = document.getElementById('ownerDates');
-      const comEl = document.getElementById('ownerCommunication');
-
-      if (buckets.general.length) genEl.value = buckets.general.join(' ');
-      if (buckets.interests.length) intEl.value = buckets.interests.join(' ');
-      if (buckets.dates.length) datEl.value = buckets.dates.join(' ');
-      if (buckets.communication.length) comEl.value = buckets.communication.join(' ');
+      Object.entries(data.fields || {}).forEach(([key, value]) => {
+        if (fieldElMap[key] && value) fieldElMap[key].value = value;
+      });
 
       btn.textContent = original;
       btn.disabled = false;
@@ -1313,7 +1321,12 @@
       note.textContent = T('aboutParsed');
       hint.appendChild(note);
       setTimeout(() => note.remove(), 3500);
-    }, 900);
+    } catch (err) {
+      console.warn('Не удалось разобрать текст через ИИ:', err.message);
+      btn.textContent = original;
+      btn.disabled = false;
+      alert(T('aboutParseError'));
+    }
   }
 
   function openSettings() {
@@ -1614,6 +1627,38 @@
     } catch (err) {
       console.warn('Не удалось загрузить круг с сервера:', err.message);
     }
+  }
+
+  async function loadDailyAdvice() {
+    const section = document.getElementById('aiDailyAdviceSection');
+    const list = document.getElementById('aiDailyAdviceList');
+    if (!serverConnected) { section.style.display = 'none'; return; }
+
+    list.innerHTML = `<div class="empty-advice" style="text-align:left">${T('aiDailyLoading')}</div>`;
+    section.style.display = 'block';
+
+    try {
+      const data = await apiFetch('/me/daily-advice');
+      if (!data.advice || data.advice.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      list.innerHTML = data.advice.map(item => `
+        <div class="advice-item" style="cursor:default">
+          <div class="advice-icon">${escapeHtmlApp(item.icon || '✨')}</div>
+          <div class="advice-text"><b>${escapeHtmlApp(item.person || '')}</b> — ${escapeHtmlApp(item.text || '')}</div>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.warn('Не удалось загрузить советы ИИ:', err.message);
+      section.style.display = 'none';
+    }
+  }
+
+  function escapeHtmlApp(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   async function markMyWave(moodKey) {
@@ -2303,6 +2348,7 @@
   function openTodayFiltered(filter) {
     setTodayFilter(filter);
     showScreen('today');
+    loadDailyAdvice();
   }
 
   function rebuildToday() {
