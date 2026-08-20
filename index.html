@@ -360,8 +360,11 @@
     <div class="field" style="margin-top:22px"><label class="field-label" data-i18n="addLikes">Любит</label><textarea class="field-input" id="newLikes" data-i18n-ph="addLikesPh" placeholder="например, чёрный кофе без сахара, растения на подоконнике"></textarea></div>
     <div class="field"><label class="field-label" data-i18n="addBirthday">День рождения</label><input class="field-input" id="newBirthday" data-i18n-ph="addBirthdayPh" placeholder="например, 12 марта" /></div>
     <div class="field"><label class="field-label" data-i18n="addRemember">Что стоит помнить</label><textarea class="field-input" id="newRemember" data-i18n-ph="addRememberPh" placeholder="например, не любит сюрпризы на людях"></textarea></div>
-    <div class="field"><label class="field-label">Начало цикла</label><input class="field-input" type="date" id="newCycleStart" /></div>
-    <div class="empty-advice" style="text-align:left;margin:0 18px 14px;font-size:11.5px;color:var(--text-faint)">Если указать дату начала последних месячных — Tendo сам посчитает фазу цикла и даст советы. Позаботиться о подруге в дни, когда ей тяжело.</div>
+    <div class="field">
+      <label class="field-label">Начало цикла</label>
+      <input class="field-input" type="date" id="newCycleStart" />
+      <div style="margin-top:8px;font-size:11.5px;color:var(--text-faint);line-height:1.45;text-align:left">Позаботься о подруге в трудные дни.<br>Обними, принеси шоколадку 🍫</div>
+    </div>
     <div class="advice-item" style="cursor:default;margin:0 18px 14px">
       <div class="advice-icon" style="background:rgba(240,169,78,0.15)">⭐</div>
       <div class="advice-text" data-i18n="legendPriority">Приоритетный</div>
@@ -1261,7 +1264,8 @@
     menstruation: [
       { icon: '🕊', text: 'Сегодня лучше без резких тем — будь мягче в разговоре.' },
       { icon: '💗', text: 'Она чувствует потребность в тепле и поддержке. Скажи что-то доброе и искреннее.' },
-      { icon: '☕', text: 'Предложи уютный вечер дома — без активных планов сегодня.' }
+      { icon: '☕', text: 'Предложи уютный вечер дома — без активных планов сегодня.' },
+      { icon: '🍫', text: 'Обними. Принеси шоколадку.' }
     ],
     follicular: [
       { icon: '💬', text: 'Хорошее время для лёгкого общения и совместных планов.' },
@@ -2277,8 +2281,11 @@
       <div class="field" style="margin-top:22px"><label class="field-label">${T('addLikes')}</label><textarea class="field-input" id="editLikes">${p.likes || ''}</textarea></div>
       <div class="field"><label class="field-label">${T('addBirthday')}</label><input class="field-input" id="editBirthday" placeholder="${T('addBirthdayPh')}" value="${p.birthdate || ''}" /></div>
       <div class="field"><label class="field-label">${T('addRemember')}</label><textarea class="field-input" id="editRemember">${p.remember || ''}</textarea></div>
-      <div class="field"><label class="field-label">Начало цикла</label><input class="field-input" type="date" id="editCycleStart" value="${p.cycleStart || ''}" /></div>
-      <div class="empty-advice" style="text-align:left;margin:0 18px 14px;font-size:11.5px;color:var(--text-faint)">Tendo посчитает фазу по стандартному 28-дневному циклу и даст советы. Позаботиться о подруге в дни, когда ей тяжело.</div>
+      <div class="field">
+        <label class="field-label">Начало цикла</label>
+        <input class="field-input" type="date" id="editCycleStart" value="${p.cycleStart || ''}" />
+        <div style="margin-top:8px;font-size:11.5px;color:var(--text-faint);line-height:1.45;text-align:left">Позаботься о подруге в трудные дни.<br>Обними, принеси шоколадку 🍫</div>
+      </div>
       <div class="advice-item" style="cursor:default;margin:0 18px 14px">
         <div class="advice-icon" style="background:rgba(240,169,78,0.15)">⭐</div>
         <div class="advice-text">${T('legendPriority')}</div>
