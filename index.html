@@ -560,7 +560,7 @@
         <div class="advice-text" data-i18n="privacyPolicy">Политика конфиденциальности</div>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </div>
-      <div class="advice-item" onclick="showScreen('support')">
+      <div class="advice-item" onclick="showScreen('support'); loadSupportHistory();">
         <div class="advice-icon" style="background:rgba(140,150,240,0.15)">💬</div>
         <div><div class="advice-text" data-i18n="support">Написать в поддержку</div><div class="ti-sub">Nymfa.sv@gmail.com</div></div>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -601,13 +601,17 @@
   <div class="screen" id="screen-support">
     <header class="simple">
       <div class="icon-btn" onclick="showScreen('settings')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></div>
-      <div><div class="page-title" data-i18n="supportTitle">Написать в поддержку</div><div class="page-sub" data-i18n="supportSub">опиши, что случилось — ответим на почту</div></div>
+      <div><div class="page-title" data-i18n="supportTitle">Написать в поддержку</div><div class="page-sub" data-i18n="supportSub2">ответ увидишь здесь же</div></div>
     </header>
     <div class="field" style="margin-top:18px">
       <textarea class="field-input" id="supportText" data-i18n-ph="supportPlaceholder" placeholder="опиши проблему или вопрос как можно подробнее" style="min-height:140px"></textarea>
     </div>
-    <div class="empty-advice" style="text-align:left;padding-top:6px" data-i18n="supportEmailNote">Ответим на <span id="supportEmailInline">Nymfa.sv@gmail.com</span> — если хочешь получить ответ, укажи свою почту в тексте.</div>
     <div class="save-bar"><button class="save-btn" onclick="sendSupportMessage()" id="sendSupportBtn" data-i18n="supportSend">Отправить сообщение</button></div>
+
+    <div class="section" style="margin-top:8px">
+      <div class="section-head"><span class="section-title" data-i18n="supportHistoryTitle">Мои обращения</span></div>
+      <div id="supportHistoryList"><div class="empty-advice" data-i18n="supportHistoryEmpty">Пока не было обращений</div></div>
+    </div>
   </div>
 
   <!-- SCREEN: ARCHIVE PICKER -->
@@ -913,6 +917,8 @@
       supportTitle: "Написать в поддержку", supportSub: "опиши, что случилось — ответим на почту", supportPlaceholder: "опиши проблему или вопрос как можно подробнее",
       supportEmailNote: "Ответим на Nymfa.sv@gmail.com — если хочешь получить ответ, укажи свою почту в тексте.",
       supportSend: "Отправить сообщение", supportSent: "Отправлено ✓", supportSendError: "Не удалось отправить, попробуй ещё раз",
+      supportSub2: "ответ увидишь здесь же", supportHistoryTitle: "Мои обращения", supportHistoryEmpty: "Пока не было обращений",
+      supportReplied: "есть ответ", supportWaiting: "ждёт ответа", supportReplyLabel: "Ответ от Tendo:",
       accountSection: "Аккаунт", logout: "Архивировать данные", deleteAccount: "Удалить аккаунт и все данные",
       archiveTitle: "На сколько архивировать?", archiveDesc: "Круг спрячется, но данные никуда не денутся",
       archive1m: "1 месяц", archive6m: "6 месяцев", archive12m: "12 месяцев", archiveConfirm: "Архивировать",
@@ -1008,6 +1014,8 @@
       supportTitle: "Написати в підтримку", supportSub: "опиши, що сталося — відповімо на пошту", supportPlaceholder: "опиши проблему або питання якомога детальніше",
       supportEmailNote: "Відповімо на Nymfa.sv@gmail.com — якщо хочеш отримати відповідь, вкажи свою пошту в тексті.",
       supportSend: "Надіслати повідомлення", supportSent: "Надіслано ✓", supportSendError: "Не вдалося надіслати, спробуй ще раз",
+      supportSub2: "відповідь побачиш тут же", supportHistoryTitle: "Мої звернення", supportHistoryEmpty: "Поки не було звернень",
+      supportReplied: "є відповідь", supportWaiting: "чекає відповіді", supportReplyLabel: "Відповідь від Tendo:",
       accountSection: "Обліковий запис", logout: "Архівувати дані", deleteAccount: "Видалити акаунт і всі дані",
       archiveTitle: "На скільки архівувати?", archiveDesc: "Коло сховається, але дані нікуди не подінуться",
       archive1m: "1 місяць", archive6m: "6 місяців", archive12m: "12 місяців", archiveConfirm: "Архівувати",
@@ -1103,6 +1111,8 @@
       supportTitle: "Contact support", supportSub: "describe what happened — we'll reply by email", supportPlaceholder: "describe the problem or question in as much detail as possible",
       supportEmailNote: "We'll reply to Nymfa.sv@gmail.com — if you'd like a reply, include your email in the message.",
       supportSend: "Send message", supportSent: "Sent ✓", supportSendError: "Could not send, try again",
+      supportSub2: "you'll see the reply right here", supportHistoryTitle: "My messages", supportHistoryEmpty: "No messages yet",
+      supportReplied: "replied", supportWaiting: "waiting for reply", supportReplyLabel: "Reply from Tendo:",
       accountSection: "Account", logout: "Archive my data", deleteAccount: "Delete account and all data",
       archiveTitle: "How long to archive?", archiveDesc: "Your circle will be hidden, but nothing is deleted",
       archive1m: "1 month", archive6m: "6 months", archive12m: "12 months", archiveConfirm: "Archive",
@@ -1198,6 +1208,8 @@
       supportTitle: "Scrie la suport", supportSub: "descrie ce s-a intamplat - raspundem pe email", supportPlaceholder: "descrie problema sau intrebarea cat mai detaliat",
       supportEmailNote: "Raspundem la Nymfa.sv@gmail.com - daca vrei un raspuns, mentioneaza emailul tau in mesaj.",
       supportSend: "Trimite mesajul", supportSent: "Trimis ✓", supportSendError: "Nu s-a putut trimite, incearca din nou",
+      supportSub2: "vei vedea raspunsul aici", supportHistoryTitle: "Mesajele mele", supportHistoryEmpty: "Inca nu ai trimis mesaje",
+      supportReplied: "raspuns primit", supportWaiting: "asteapta raspuns", supportReplyLabel: "Raspuns de la Tendo:",
       accountSection: "Cont", logout: "Arhivează datele", deleteAccount: "Șterge contul și toate datele",
       archiveTitle: "Pentru cât timp arhivezi?", archiveDesc: "Cercul va fi ascuns, dar nimic nu se șterge",
       archive1m: "1 lună", archive6m: "6 luni", archive12m: "12 luni", archiveConfirm: "Arhivează",
@@ -1285,6 +1297,10 @@
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
     rebuildCircle();
     showScreen('settings');
+    if (serverConnected) {
+      apiFetch('/me/language', { method: 'PUT', body: JSON.stringify({ language: lang }) })
+        .catch(err => console.warn('Не удалось сохранить язык на сервере:', err.message));
+    }
   }
 
   const silhouette = `<svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.55)"><circle cx="12" cy="8" r="4.2"/><path d="M4 20.5c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/></svg>`;
@@ -1431,21 +1447,6 @@
     if (ownerProfile.photoDataUrl) {
       headerAvatar.innerHTML = `<img src="${ownerProfile.photoDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
     }
-  }
-
-  let profileSaveTimeout = null;
-  function saveOwnerProfileToServer() {
-    if (!serverConnected) return;
-    clearTimeout(profileSaveTimeout);
-    profileSaveTimeout = setTimeout(() => {
-      apiFetch('/me/profile', {
-        method: 'PUT',
-        body: JSON.stringify({
-          about: ownerProfile.about, interests: ownerProfile.interests,
-          important_dates: ownerProfile.dates, communication_style: ownerProfile.communication
-        })
-      }).catch(err => console.warn('Не удалось сохранить профиль на сервере:', err.message));
-    }, 600);
   }
 
   document.getElementById('ownerAbout')?.addEventListener('change', () => {
@@ -1685,6 +1686,12 @@
       if (privacyCheckbox && data.user) {
         privacyCheckbox.checked = !!data.user.privacy_locked;
       }
+      if (data.user && data.user.language && data.user.language !== currentLang) {
+        currentLang = data.user.language;
+        applyStaticTranslations();
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
+        rebuildCircle();
+      }
     } catch (err) {
       console.warn('Не удалось загрузить состояние аккаунта:', err.message);
     }
@@ -1760,6 +1767,7 @@
   }
 
   function escapeHtmlApp(str) {
+    if (str === undefined || str === null) return '';
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
@@ -1951,7 +1959,7 @@
       ? `<div class="section"><div class="section-head"><span class="section-title">${T('adviceTitle')}</span><span class="section-count">${p.advice.length} ${variantWord}</span></div>
           ${p.advice.map((a,i) => `<div class="advice-item" onclick="openHelper('${key}', ${i})"><div class="advice-icon">${a.icon}</div><div class="advice-text">${a.text}</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>`).join('')}
         </div>`
-      : `<div class="section"><div class="empty-advice">${T('noAdvice')(p.name)}</div></div>`;
+      : `<div class="section"><div class="empty-advice">${T('noAdvice')(escapeHtmlApp(p.name))}</div></div>`;
 
     document.getElementById('personContent').innerHTML = `
       ${p.isDemo ? `<div class="section" style="background:rgba(139,110,240,0.1);border-color:rgba(139,110,240,0.3)">
@@ -1968,7 +1976,7 @@
           ${p.type === 'wave' ? `<div class="wave-mini-badge">${waveBadgeSvg}</div>` : ''}
         </div>
         <div class="profile-info">
-          <div class="profile-name-row"><span class="profile-name">${p.name}</span><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" onclick="openEdit('${key}')"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg></div>
+          <div class="profile-name-row"><span class="profile-name">${escapeHtmlApp(p.name)}</span><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" onclick="openEdit('${key}')"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg></div>
           <div class="relation-label">${relLabel(p.relation)}</div>
           ${p.waveText ? `<div class="profile-state-label">${T('todaySignal')}</div><div class="profile-state-value">${p.waveText}</div>` : ''}
         </div>
@@ -1991,10 +1999,10 @@
     document.getElementById('aboutBack').onclick = () => openPerson(key);
     document.getElementById('aboutContent').innerHTML = `
       <div class="section"><div class="section-head"><span class="section-title">${T('aboutLikes')}</span></div>
-        <div class="empty-advice" style="text-align:left;color:#e5e0ef">${p.likes || T('nothingAdded')}</div></div>
+        <div class="empty-advice" style="text-align:left;color:#e5e0ef">${escapeHtmlApp(p.likes) || T('nothingAdded')}</div></div>
       <div class="section"><div class="section-head"><span class="section-title">${T('aboutRemember')}</span></div>
-        <div class="empty-advice" style="text-align:left;color:#e5e0ef">${p.remember || T('nothingAdded')}</div></div>
-      <div class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg><span>${T('aboutPrivacy')(p.name)}</span></div>
+        <div class="empty-advice" style="text-align:left;color:#e5e0ef">${escapeHtmlApp(p.remember) || T('nothingAdded')}</div></div>
+      <div class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg><span>${T('aboutPrivacy')(escapeHtmlApp(p.name))}</span></div>
     `;
     showScreen('about');
   }
@@ -2014,7 +2022,7 @@
     document.getElementById('wishSub').textContent = T('wishlistFor') + p.name;
     document.getElementById('wishBack').onclick = () => openPerson(key);
     const list = p.wishlist.length > 0
-      ? `<div class="section">${p.wishlist.map(w => `<div class="advice-item"><div class="advice-icon">🎁</div><div class="advice-text">${w}</div></div>`).join('')}</div>`
+      ? `<div class="section">${p.wishlist.map(w => `<div class="advice-item"><div class="advice-icon">🎁</div><div class="advice-text">${escapeHtmlApp(w)}</div></div>`).join('')}</div>`
       : `<div class="section">
           <div class="empty-advice">${T('wishlistEmpty')}</div>
           <div class="empty-advice" style="text-align:left;padding-top:10px;font-size:11.5px;color:var(--text-faint)">${T('wishlistExamplesHint')}</div>
@@ -2052,7 +2060,7 @@
     if (p.birthdayInDays) rows.push(T('birthdayLabel') + ' — ' + p.birthdayDate);
     (p.extraDates || []).forEach(d => rows.push(typeof d === 'string' ? d : (d.label + ' — ' + d.date)));
     const list = rows.length > 0
-      ? `<div class="section">${rows.map(text => `<div class="advice-item" style="cursor:default"><div class="advice-icon">🎂</div><div class="advice-text">${text}</div></div>`).join('')}</div>`
+      ? `<div class="section">${rows.map(text => `<div class="advice-item" style="cursor:default"><div class="advice-icon">🎂</div><div class="advice-text">${escapeHtmlApp(text)}</div></div>`).join('')}</div>`
       : `<div class="section"><div class="empty-advice">${T('datesEmpty')}</div></div>`;
     document.getElementById('datesContent').innerHTML = list + `
       <div class="field" style="padding:0 22px"><input class="field-input" id="newDateEntry" placeholder="${T('datesAddPh')}" /></div>
@@ -2089,7 +2097,7 @@
     document.getElementById('historySub').textContent = T('historyFor') + p.name;
     document.getElementById('historyBack').onclick = () => openPerson(key);
     const list = (p.history && p.history.length > 0)
-      ? `<div class="section">${p.history.map(h => `<div class="advice-item"><div class="advice-icon">🕓</div><div class="advice-text"><b>${h.date}</b><br>${h.text}</div></div>`).join('')}</div>`
+      ? `<div class="section">${p.history.map(h => `<div class="advice-item"><div class="advice-icon">🕓</div><div class="advice-text"><b>${escapeHtmlApp(h.date)}</b><br>${escapeHtmlApp(h.text)}</div></div>`).join('')}</div>`
       : `<div class="section"><div class="empty-advice">${T('historyEmpty')}</div></div>`;
     document.getElementById('historyContent').innerHTML = list + `
       <div class="field" style="padding:0 22px"><textarea class="field-input" id="newHistoryText" placeholder="${T('historyAddPh')}"></textarea></div>
@@ -2316,6 +2324,30 @@
     showScreen('suggest');
   }
 
+  async function loadSupportHistory() {
+    const list = document.getElementById('supportHistoryList');
+    if (!serverConnected) return;
+    try {
+      const data = await apiFetch('/support-tickets/mine');
+      if (!data.tickets || data.tickets.length === 0) {
+        list.innerHTML = `<div class="empty-advice">${T('supportHistoryEmpty')}</div>`;
+        return;
+      }
+      list.innerHTML = data.tickets.map(t => `
+        <div class="advice-item" style="cursor:default;flex-direction:column;align-items:flex-start;gap:6px">
+          <div style="display:flex;justify-content:space-between;width:100%">
+            <span style="font-size:11px;color:var(--text-faint)">${new Date(t.created_at).toLocaleDateString('ru-RU')}</span>
+            <span style="font-size:11px;color:${t.admin_reply ? 'var(--green)' : 'var(--text-faint)'}">${t.admin_reply ? T('supportReplied') : T('supportWaiting')}</span>
+          </div>
+          <div class="advice-text" style="text-align:left">${escapeHtmlApp(t.message)}</div>
+          ${t.admin_reply ? `<div style="background:rgba(139,110,240,0.12);border-radius:10px;padding:10px;margin-top:4px;width:100%;box-sizing:border-box"><div style="font-size:10.5px;color:var(--purple);margin-bottom:4px">${T('supportReplyLabel')}</div>${escapeHtmlApp(t.admin_reply)}</div>` : ''}
+        </div>
+      `).join('');
+    } catch (err) {
+      console.warn('Не удалось загрузить историю обращений:', err.message);
+    }
+  }
+
   function sendSupportMessage() {
     const textEl = document.getElementById('supportText');
     const text = textEl.value.trim();
@@ -2330,11 +2362,11 @@
         body: JSON.stringify({ message: text + ` (от: ${ownerProfile.name})` })
       }).then(() => {
         btn.textContent = T('supportSent');
+        textEl.value = '';
+        loadSupportHistory();
         setTimeout(() => {
           btn.textContent = original;
           btn.disabled = false;
-          textEl.value = '';
-          showScreen('settings');
         }, 1400);
       }).catch(err => {
         console.warn('Не удалось отправить обращение на сервере:', err.message);
@@ -2469,9 +2501,9 @@
     const p = people[key];
     const occasionLine = advice.text;
     const drafts = {
-      warm: T('draftWarm')(p.name, occasionLine),
-      tender: T('draftTender')(p.name),
-      light: T('draftLight')(p.name)
+      warm: T('draftWarm')(escapeHtmlApp(p.name), occasionLine),
+      tender: T('draftTender')(escapeHtmlApp(p.name)),
+      light: T('draftLight')(escapeHtmlApp(p.name))
     };
     document.getElementById('helperContent').innerHTML = `
       <div class="section">
@@ -2573,7 +2605,7 @@
       } else {
         el.innerHTML = `
           <div class="date-icon-wrap">${dateIconSvg}</div>
-          <div><div class="ti-name">${T('birthdayIn')(p.birthdayInDays, p.name)}</div><div class="ti-sub">${p.birthdayDate}</div></div>
+          <div><div class="ti-name">${T('birthdayIn')(p.birthdayInDays, escapeHtmlApp(p.name))}</div><div class="ti-sub">${escapeHtmlApp(p.birthdayDate)}</div></div>
           <span class="ti-time">09:00</span><svg class="ti-chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>`;
       }
       todayList.appendChild(el);
