@@ -893,6 +893,7 @@
       restoreNow: "Восстановить сейчас",
       pauseOrDelete: "Удалить / Пауза", deleteSectionTitle: "Удалить безвозвратно", deleteSectionDesc: "Все данные удалятся навсегда. Это нельзя отменить.",
       deleteForeverStep1: "Удалить всё безвозвратно", deleteForeverStep2: "Точно? Нажми ещё раз, чтобы удалить", deletePersonBtn: "Удалить этого человека", deletePersonConfirm: "Точно? Нажми ещё раз",
+      demoPersonNote: "Это демо-пример для показа возможностей. Отредактируй карточку, чтобы заменить своим настоящим человеком, или просто убери её.", demoReplaceBtn: "Заменить своим человеком", demoDismissBtn: "Убрать",
       langSection: "Язык",
       profileTitle: "Профиль", profileSub: "твои личные данные", ownerRole: "Владелец круга",
       aboutMe: "О себе", aboutMePh: "например, люблю дарить сюрпризы, но плохо помню даты",
@@ -982,6 +983,7 @@
       restoreNow: "Відновити зараз",
       pauseOrDelete: "Видалити / Пауза", deleteSectionTitle: "Видалити безповоротно", deleteSectionDesc: "Усі дані видаляться назавжди. Це не можна скасувати.",
       deleteForeverStep1: "Видалити все безповоротно", deleteForeverStep2: "Точно? Натисни ще раз, щоб видалити", deletePersonBtn: "Видалити цю людину", deletePersonConfirm: "Точно? Натисни ще раз",
+      demoPersonNote: "Це демо-приклад для показу можливостей. Відредагуй картку, щоб замінити своєю справжньою людиною, або просто прибери її.", demoReplaceBtn: "Замінити своєю людиною", demoDismissBtn: "Прибрати",
       langSection: "Мова",
       profileTitle: "Профіль", profileSub: "твої особисті дані", ownerRole: "Власник кола",
       aboutMe: "Про себе", aboutMePh: "наприклад, люблю дарувати сюрпризи, але погано пам'ятаю дати",
@@ -1071,6 +1073,7 @@
       restoreNow: "Restore now",
       pauseOrDelete: "Delete / Pause", deleteSectionTitle: "Delete permanently", deleteSectionDesc: "All data will be deleted forever. This cannot be undone.",
       deleteForeverStep1: "Delete everything permanently", deleteForeverStep2: "Are you sure? Tap again to delete", deletePersonBtn: "Delete this person", deletePersonConfirm: "Are you sure? Tap again",
+      demoPersonNote: "This is a demo example to show what's possible. Edit the card to replace it with your own real person, or just remove it.", demoReplaceBtn: "Replace with my person", demoDismissBtn: "Remove",
       langSection: "Language",
       profileTitle: "Profile", profileSub: "your personal info", ownerRole: "Circle owner",
       aboutMe: "About me", aboutMePh: "e.g. I love giving surprises but I'm bad with dates",
@@ -1160,6 +1163,7 @@
       restoreNow: "Restaureaza acum",
       pauseOrDelete: "Sterge / Pauza", deleteSectionTitle: "Sterge definitiv", deleteSectionDesc: "Toate datele vor fi sterse definitiv. Aceasta actiune nu poate fi anulata.",
       deleteForeverStep1: "Sterge tot definitiv", deleteForeverStep2: "Esti sigur? Apasa din nou pentru a sterge", deletePersonBtn: "Sterge aceasta persoana", deletePersonConfirm: "Esti sigur? Apasa din nou",
+      demoPersonNote: "Acesta este un exemplu demo pentru a arata posibilitatile. Editeaza cartela ca sa o inlocuiesti cu propria ta persoana, sau doar elimin-o.", demoReplaceBtn: "Inlocuieste cu persoana mea", demoDismissBtn: "Elimina",
       langSection: "Limbă",
       profileTitle: "Profil", profileSub: "datele tale personale", ownerRole: "Proprietarul cercului",
       aboutMe: "Despre mine", aboutMePh: "de ex. îmi place să fac surprize, dar țin minte greu datele",
@@ -1420,7 +1424,7 @@
   const dateIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="#a99bf0" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`;
 
   const people = {
-    masha: { name: "Маша", relation: "partner", angle: -90, type: "wave", badge: "crown", colors: ["#e8a6c2","#a3486f"],
+    masha: { isDemo: true, name: "Маша", relation: "partner", angle: -90, type: "wave", badge: "crown", colors: ["#e8a6c2","#a3486f"],
       waveText: "🕊 Лучше помягче", priorityTag: true,
       likes: "Чёрный кофе без сахара, растения на подоконнике, уютные вечера дома с сериалом.",
       remember: "Не любит сюрпризы на людях. Важно приходить не опаздывая.",
@@ -1435,10 +1439,10 @@
         { icon: "☕", text: "Предложи ей уютный вечер дома — без активных планов сегодня." },
         { icon: "🌷", text: "Маленький приятный сюрприз поднимет ей настроение." }
       ]},
-    katya: { name: "Катя", relation: "friend", angle: -45, type: "regular", badge: null, colors: ["#c9bfa0","#7d7256"], waveText: null, priorityTag: false,
+    katya: { isDemo: true, name: "Катя", relation: "friend", angle: -45, type: "regular", badge: null, colors: ["#c9bfa0","#7d7256"], waveText: null, priorityTag: false,
       likes: "Йога по утрам, зелёный чай, фотография плёночным фотоаппаратом.",
       remember: "", wishlist: [], extraDates: [], history: [], advice: [] },
-    lena: { name: "Лена", relation: "friend", angle: 0, type: "wave", badge: "wave", colors: ["#d9a3a6","#8c4c50"],
+    lena: { isDemo: true, name: "Лена", relation: "friend", angle: 0, type: "wave", badge: "wave", colors: ["#d9a3a6","#8c4c50"],
       waveText: "💛 Всё супер", priorityTag: false,
       likes: "Активный отдых, велосипед, острая еда.",
       remember: "", wishlist: ["Новый велосипедный шлем"], extraDates: [], history: [],
@@ -1446,16 +1450,16 @@
         { icon: "✨", text: "У неё отличное настроение — хороший момент предложить встретиться." },
         { icon: "💬", text: "Можно просто написать и разделить хорошее настроение вместе." }
       ]},
-    anton: { name: "Антон", relation: "colleague", angle: 45, type: "regular", badge: null, colors: ["#9aada0","#4d5f52"], waveText: null, priorityTag: false,
+    anton: { isDemo: true, name: "Антон", relation: "colleague", angle: 45, type: "regular", badge: null, colors: ["#9aada0","#4d5f52"], waveText: null, priorityTag: false,
       likes: "Настольные игры, крафтовое пиво.", remember: "", wishlist: [], extraDates: [], history: [], advice: [] },
-    ira: { name: "Ира", relation: "family", angle: 90, type: "regular", badge: "star", colors: ["#c9a582","#7a5636"], waveText: null, priorityTag: true,
+    ira: { isDemo: true, name: "Ира", relation: "family", angle: 90, type: "regular", badge: "star", colors: ["#c9a582","#7a5636"], waveText: null, priorityTag: true,
       likes: "Садоводство, детективные романы.", remember: "Плохо себя чувствует зимой — старайся звонить чаще.",
       wishlist: ["Тёплый плед", "Семена редких цветов"], extraDates: [], history: [], advice: [] },
-    dima: { name: "Дима", relation: "friend", angle: 135, type: "regular", badge: null, colors: ["#a89a8a","#5f5348"], waveText: null, priorityTag: false,
+    dima: { isDemo: true, name: "Дима", relation: "friend", angle: 135, type: "regular", badge: null, colors: ["#a89a8a","#5f5348"], waveText: null, priorityTag: false,
       likes: "Программирование, инди-игры.", remember: "", wishlist: [], extraDates: [], history: [], advice: [] },
-    sasha: { name: "Саша", relation: "friend", angle: 180, type: "regular", badge: null, colors: ["#8fa0ac","#4c5b66"], waveText: null, priorityTag: false,
+    sasha: { isDemo: true, name: "Саша", relation: "friend", angle: 180, type: "regular", badge: null, colors: ["#8fa0ac","#4c5b66"], waveText: null, priorityTag: false,
       likes: "Горы, треккинг, чёрно-белая фотография.", remember: "", wishlist: [], extraDates: [], history: [], advice: [] },
-    olya: { name: "Оля", relation: "family", angle: -135, type: "wave", badge: "wave", colors: ["#d9b98c","#8f6a3a"],
+    olya: { isDemo: true, name: "Оля", relation: "family", angle: -135, type: "wave", badge: "wave", colors: ["#d9b98c","#8f6a3a"],
       waveText: "🕊 Лучше помягче", priorityTag: false, birthdayInDays: 7, birthdayDate: "18 мая (воскресенье)",
       likes: "Растения, скандинавский дизайн, травяной чай.", remember: "",
       wishlist: ["Кашпо для монстеры", "Набор трав для чая"], extraDates: [], history: [],
@@ -1464,6 +1468,14 @@
         { icon: "🎂", text: "Через 7 дней у неё день рождения — можно начать думать о подарке." }
       ]},
   };
+
+  // Демо-людей, которых уже заменили или удалили, больше не показываем при следующих
+  // открытиях приложения (иначе они бы "воскресали" каждый раз, ведь сами демо-записи
+  // прописаны прямо в коде, не в базе данных).
+  try {
+    const dismissed = JSON.parse(localStorage.getItem('tendo_dismissed_demos') || '[]');
+    dismissed.forEach(key => delete people[key]);
+  } catch (e) { /* ничего страшного, просто покажем демо ещё раз */ }
 
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1750,6 +1762,13 @@
       : `<div class="section"><div class="empty-advice">${T('noAdvice')(p.name)}</div></div>`;
 
     document.getElementById('personContent').innerHTML = `
+      ${p.isDemo ? `<div class="section" style="background:rgba(139,110,240,0.1);border-color:rgba(139,110,240,0.3)">
+        <div class="empty-advice" style="text-align:left;color:var(--purple)">${T('demoPersonNote')}</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="save-btn" style="flex:1;background:rgba(255,255,255,0.08);color:var(--text-dim);box-shadow:none;padding:10px" onclick="openEdit('${key}')">${T('demoReplaceBtn')}</button>
+          <button class="save-btn" style="flex:1;background:rgba(226,75,74,0.12);color:#e2504a;box-shadow:none;padding:10px" onclick="dismissDemoPerson('${key}')">${T('demoDismissBtn')}</button>
+        </div>
+      </div>` : ''}
       ${tagsHtml}
       <div class="profile-row">
         <div class="profile-avatar ${avatarRingClass(p)}">
@@ -1975,7 +1994,9 @@
       deletePersonPending = null;
       const p = people[key];
       const serverId = p.serverId;
+      const wasDemo = p.isDemo;
       delete people[key];
+      if (wasDemo) dismissDemoKey(key);
       rebuildCircle();
       showScreen('circle');
 
@@ -1994,6 +2015,29 @@
     p.priorityTag = document.getElementById('editPriority').checked;
     const activeChip = document.querySelector('#editContent .relation-chip.active');
     if (activeChip) p.relation = activeChip.dataset.rel;
+
+    if (p.isDemo) {
+      // Редактирование демо-карточки = замена её настоящим человеком.
+      // Старый демо-слот "отклоняем" навсегда, данные переносим под новый, настоящий ключ.
+      dismissDemoKey(key);
+      delete people[key];
+      const newKey = 'p_' + Date.now();
+      p.isDemo = false;
+      people[newKey] = p;
+      rebuildCircle();
+      openPerson(newKey);
+
+      if (serverConnected) {
+        apiFetch('/circle', {
+          method: 'POST',
+          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
+        }).then(data => {
+          if (data.person) people[newKey].serverId = data.person.id;
+        }).catch(err => console.warn('Не удалось сохранить нового человека на сервере:', err.message));
+      }
+      return;
+    }
+
     rebuildCircle();
     openPerson(key);
 
@@ -2003,6 +2047,23 @@
         body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, priority: p.priorityTag, photo_url: p.photoDataUrl })
       }).catch(err => console.warn('Не удалось сохранить изменения на сервере:', err.message));
     }
+  }
+
+  function dismissDemoKey(key) {
+    try {
+      const dismissed = JSON.parse(localStorage.getItem('tendo_dismissed_demos') || '[]');
+      if (!dismissed.includes(key)) {
+        dismissed.push(key);
+        localStorage.setItem('tendo_dismissed_demos', JSON.stringify(dismissed));
+      }
+    } catch (e) { /* не критично */ }
+  }
+
+  function dismissDemoPerson(key) {
+    dismissDemoKey(key);
+    delete people[key];
+    rebuildCircle();
+    showScreen('circle');
   }
 
   const helperTemplates = {
