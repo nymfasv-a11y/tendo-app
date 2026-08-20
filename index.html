@@ -205,33 +205,6 @@
   .save-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
   .privacy-note { display: flex; gap: 10px; margin: 16px 18px 0; padding: 12px 14px; background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; font-size: calc(var(--font-scale) * 11px); color: var(--text-faint); line-height: 1.5; }
   .privacy-note svg { width: 15px; height: 15px; stroke: var(--text-faint); flex-shrink: 0; margin-top: 1px; }
-
-  /* Wave status animations (owner-side cycle) */
-  .wave-status {
-    display: inline-block;
-    font-size: calc(var(--font-scale) * 16px);
-    font-weight: 600;
-    padding: 10px 16px;
-    border-radius: 18px;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    color: #f496b6;
-  }
-  .wave-status.soft { animation: softPulse 2.4s ease-in-out infinite; }
-  @keyframes softPulse {
-    0%, 100% { opacity: 0.85; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.04); }
-  }
-  .wave-status.ovulation { animation: waveGlow 2s ease-in-out infinite; }
-  @keyframes waveGlow {
-    0%, 100% { filter: drop-shadow(0 0 4px rgba(255,100,120,0.4)); }
-    50% { filter: drop-shadow(0 0 12px rgba(255,80,100,0.75)); }
-  }
-  .wave-status.neutral { animation: waveBreathe 4s ease-in-out infinite; }
-  @keyframes waveBreathe {
-    0%, 100% { opacity: 0.9; }
-    50% { opacity: 1; }
-  }
 </style>
 </head>
 <body>
@@ -360,11 +333,6 @@
     <div class="field" style="margin-top:22px"><label class="field-label" data-i18n="addLikes">Любит</label><textarea class="field-input" id="newLikes" data-i18n-ph="addLikesPh" placeholder="например, чёрный кофе без сахара, растения на подоконнике"></textarea></div>
     <div class="field"><label class="field-label" data-i18n="addBirthday">День рождения</label><input class="field-input" id="newBirthday" data-i18n-ph="addBirthdayPh" placeholder="например, 12 марта" /></div>
     <div class="field"><label class="field-label" data-i18n="addRemember">Что стоит помнить</label><textarea class="field-input" id="newRemember" data-i18n-ph="addRememberPh" placeholder="например, не любит сюрпризы на людях"></textarea></div>
-    <div class="field">
-      <label class="field-label">Начало цикла</label>
-      <input class="field-input" type="date" id="newCycleStart" />
-      <div style="margin-top:8px;font-size:11.5px;color:var(--text-faint);line-height:1.45;text-align:left">Позаботься о подруге в трудные дни.</div>
-    </div>
     <div class="advice-item" style="cursor:default;margin:0 18px 14px">
       <div class="advice-icon" style="background:rgba(240,169,78,0.15)">⭐</div>
       <div class="advice-text" data-i18n="legendPriority">Приоритетный</div>
@@ -451,7 +419,6 @@
       <div class="profile-info">
         <div class="profile-name-row" style="display:flex;flex-direction:column;align-items:flex-start;gap:8px">
           <input class="field-input" id="ownerNameInput" value="Александр" style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;padding:6px 10px;width:auto" />
-          <button class="save-btn" id="saveNameBtn" onclick="updateOwnerName()" style="padding:6px 16px;font-size:12px;box-shadow:none" data-i18n="saveNameBtn">Сохранить имя</button>
         </div>
         <div class="relation-label" data-i18n="ownerRole">Владелец круга</div>
       </div>
@@ -478,6 +445,7 @@
       </div>
 
       <div class="empty-advice" style="text-align:left;padding-top:10px" data-i18n="aboutMeHelper">Это может использовать AI-хелпер, когда подсказывает, как лучше сформулировать сообщение от твоего имени.</div>
+      <button class="save-btn" id="saveProfileBtn" onclick="saveWholeProfile()" style="margin-top:14px" data-i18n="saveProfileBtn">Сохранить</button>
     </div>
 
     <div class="section" style="background:rgba(239,95,146,0.08);border-color:rgba(239,95,146,0.25)">
@@ -592,7 +560,7 @@
         <div class="advice-text" data-i18n="privacyPolicy">Политика конфиденциальности</div>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </div>
-      <div class="advice-item" onclick="contactSupport(this)">
+      <div class="advice-item" onclick="showScreen('support')">
         <div class="advice-icon" style="background:rgba(140,150,240,0.15)">💬</div>
         <div><div class="advice-text" data-i18n="support">Написать в поддержку</div><div class="ti-sub">Nymfa.sv@gmail.com</div></div>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -628,6 +596,18 @@
       <textarea class="field-input" id="suggestText" data-i18n-ph="suggestPlaceholder" placeholder="например: было бы здорово, если бы Tendo спрашивал про..." style="min-height:120px"></textarea>
     </div>
     <div class="save-bar"><button class="save-btn" onclick="sendSuggestion()" data-i18n="suggestSend">Отправить идею</button></div>
+  </div>
+
+  <div class="screen" id="screen-support">
+    <header class="simple">
+      <div class="icon-btn" onclick="showScreen('settings')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></div>
+      <div><div class="page-title" data-i18n="supportTitle">Написать в поддержку</div><div class="page-sub" data-i18n="supportSub">опиши, что случилось — ответим на почту</div></div>
+    </header>
+    <div class="field" style="margin-top:18px">
+      <textarea class="field-input" id="supportText" data-i18n-ph="supportPlaceholder" placeholder="опиши проблему или вопрос как можно подробнее" style="min-height:140px"></textarea>
+    </div>
+    <div class="empty-advice" style="text-align:left;padding-top:6px" data-i18n="supportEmailNote">Ответим на <span id="supportEmailInline">Nymfa.sv@gmail.com</span> — если хочешь получить ответ, укажи свою почту в тексте.</div>
+    <div class="save-bar"><button class="save-btn" onclick="sendSupportMessage()" id="sendSupportBtn" data-i18n="supportSend">Отправить сообщение</button></div>
   </div>
 
   <!-- SCREEN: ARCHIVE PICKER -->
@@ -930,6 +910,9 @@
       privacyBlind: "Это работает вслепую — включение не раскрывает, есть ли сейчас о тебе такие записи.",
       subSection: "Подписка", subText: "Сейчас Premium бесплатно для всех — на время запуска, без ограничений.",
       aboutSection: "О Tendo", howWorks: "Как работает Tendo и почему", privacyPolicy: "Политика конфиденциальности", support: "Написать в поддержку",
+      supportTitle: "Написать в поддержку", supportSub: "опиши, что случилось — ответим на почту", supportPlaceholder: "опиши проблему или вопрос как можно подробнее",
+      supportEmailNote: "Ответим на Nymfa.sv@gmail.com — если хочешь получить ответ, укажи свою почту в тексте.",
+      supportSend: "Отправить сообщение", supportSent: "Отправлено ✓", supportSendError: "Не удалось отправить, попробуй ещё раз",
       accountSection: "Аккаунт", logout: "Архивировать данные", deleteAccount: "Удалить аккаунт и все данные",
       archiveTitle: "На сколько архивировать?", archiveDesc: "Круг спрячется, но данные никуда не денутся",
       archive1m: "1 месяц", archive6m: "6 месяцев", archive12m: "12 месяцев", archiveConfirm: "Архивировать",
@@ -939,7 +922,7 @@
       deleteForeverStep1: "Удалить всё безвозвратно", deleteForeverStep2: "Точно? Нажми ещё раз, чтобы удалить", deletePersonBtn: "Удалить этого человека", deletePersonConfirm: "Точно? Нажми ещё раз",
       demoPersonNote: "Это демо-пример для показа возможностей. Отредактируй карточку, чтобы заменить своим настоящим человеком, или просто убери её.", demoReplaceBtn: "Заменить своим человеком", demoDismissBtn: "Убрать",
       langSection: "Язык",
-      profileTitle: "Профиль", profileSub: "твои личные данные", ownerRole: "Владелец круга", saveNameBtn: "Сохранить имя",
+      profileTitle: "Профиль", profileSub: "твои личные данные", ownerRole: "Владелец круга", saveProfileBtn: "Сохранить", profileSaved: "Сохранено ✓", profileSaveError: "Не удалось сохранить, попробуй ещё раз",
       aboutMe: "О себе", aboutMePh: "например, люблю дарить сюрпризы, но плохо помню даты",
       aboutModeForm: "Анкета", aboutModeFree: "Общая инфа",
       aboutFieldGeneral: "О себе", aboutFieldInterests: "Интересы и увлечения", aboutFieldDates: "Важные даты", aboutFieldCommunication: "Как лучше со мной общаться",
@@ -1022,6 +1005,9 @@
       privacyBlind: "Це працює наосліп — увімкнення не розкриває, чи є зараз про тебе такі записи.",
       subSection: "Підписка", subText: "Зараз Premium безкоштовний для всіх — на час запуску, без обмежень.",
       aboutSection: "Про Tendo", howWorks: "Як працює Tendo і чому", privacyPolicy: "Політика конфіденційності", support: "Написати в підтримку",
+      supportTitle: "Написати в підтримку", supportSub: "опиши, що сталося — відповімо на пошту", supportPlaceholder: "опиши проблему або питання якомога детальніше",
+      supportEmailNote: "Відповімо на Nymfa.sv@gmail.com — якщо хочеш отримати відповідь, вкажи свою пошту в тексті.",
+      supportSend: "Надіслати повідомлення", supportSent: "Надіслано ✓", supportSendError: "Не вдалося надіслати, спробуй ще раз",
       accountSection: "Обліковий запис", logout: "Архівувати дані", deleteAccount: "Видалити акаунт і всі дані",
       archiveTitle: "На скільки архівувати?", archiveDesc: "Коло сховається, але дані нікуди не подінуться",
       archive1m: "1 місяць", archive6m: "6 місяців", archive12m: "12 місяців", archiveConfirm: "Архівувати",
@@ -1031,7 +1017,7 @@
       deleteForeverStep1: "Видалити все безповоротно", deleteForeverStep2: "Точно? Натисни ще раз, щоб видалити", deletePersonBtn: "Видалити цю людину", deletePersonConfirm: "Точно? Натисни ще раз",
       demoPersonNote: "Це демо-приклад для показу можливостей. Відредагуй картку, щоб замінити своєю справжньою людиною, або просто прибери її.", demoReplaceBtn: "Замінити своєю людиною", demoDismissBtn: "Прибрати",
       langSection: "Мова",
-      profileTitle: "Профіль", profileSub: "твої особисті дані", ownerRole: "Власник кола", saveNameBtn: "Зберегти ім'я",
+      profileTitle: "Профіль", profileSub: "твої особисті дані", ownerRole: "Власник кола", saveProfileBtn: "Зберегти", profileSaved: "Збережено ✓", profileSaveError: "Не вдалося зберегти, спробуй ще раз",
       aboutMe: "Про себе", aboutMePh: "наприклад, люблю дарувати сюрпризи, але погано пам'ятаю дати",
       aboutModeForm: "Анкета", aboutModeFree: "Загальна інфо",
       aboutFieldGeneral: "Про себе", aboutFieldInterests: "Інтереси та захоплення", aboutFieldDates: "Важливі дати", aboutFieldCommunication: "Як краще зі мною спілкуватися",
@@ -1114,6 +1100,9 @@
       privacyBlind: "This works blindly — turning it on doesn't reveal whether such records exist about you right now.",
       subSection: "Subscription", subText: "Premium is free for everyone right now — during launch, no limits.",
       aboutSection: "About Tendo", howWorks: "How Tendo works and why", privacyPolicy: "Privacy policy", support: "Contact support",
+      supportTitle: "Contact support", supportSub: "describe what happened — we'll reply by email", supportPlaceholder: "describe the problem or question in as much detail as possible",
+      supportEmailNote: "We'll reply to Nymfa.sv@gmail.com — if you'd like a reply, include your email in the message.",
+      supportSend: "Send message", supportSent: "Sent ✓", supportSendError: "Could not send, try again",
       accountSection: "Account", logout: "Archive my data", deleteAccount: "Delete account and all data",
       archiveTitle: "How long to archive?", archiveDesc: "Your circle will be hidden, but nothing is deleted",
       archive1m: "1 month", archive6m: "6 months", archive12m: "12 months", archiveConfirm: "Archive",
@@ -1123,7 +1112,7 @@
       deleteForeverStep1: "Delete everything permanently", deleteForeverStep2: "Are you sure? Tap again to delete", deletePersonBtn: "Delete this person", deletePersonConfirm: "Are you sure? Tap again",
       demoPersonNote: "This is a demo example to show what's possible. Edit the card to replace it with your own real person, or just remove it.", demoReplaceBtn: "Replace with my person", demoDismissBtn: "Remove",
       langSection: "Language",
-      profileTitle: "Profile", profileSub: "your personal info", ownerRole: "Circle owner", saveNameBtn: "Save name",
+      profileTitle: "Profile", profileSub: "your personal info", ownerRole: "Circle owner", saveProfileBtn: "Save", profileSaved: "Saved ✓", profileSaveError: "Could not save, try again",
       aboutMe: "About me", aboutMePh: "e.g. I love giving surprises but I'm bad with dates",
       aboutModeForm: "Form", aboutModeFree: "General info",
       aboutFieldGeneral: "About me", aboutFieldInterests: "Interests and hobbies", aboutFieldDates: "Important dates", aboutFieldCommunication: "How best to reach me",
@@ -1206,6 +1195,9 @@
       privacyBlind: "Funcționează orb — activarea nu dezvăluie dacă există acum astfel de înregistrări despre tine.",
       subSection: "Abonament", subText: "Premium este gratuit pentru toti acum - in perioada de lansare, fara limite.",
       aboutSection: "Despre Tendo", howWorks: "Cum funcționează Tendo și de ce", privacyPolicy: "Politica de confidențialitate", support: "Scrie la suport",
+      supportTitle: "Scrie la suport", supportSub: "descrie ce s-a intamplat - raspundem pe email", supportPlaceholder: "descrie problema sau intrebarea cat mai detaliat",
+      supportEmailNote: "Raspundem la Nymfa.sv@gmail.com - daca vrei un raspuns, mentioneaza emailul tau in mesaj.",
+      supportSend: "Trimite mesajul", supportSent: "Trimis ✓", supportSendError: "Nu s-a putut trimite, incearca din nou",
       accountSection: "Cont", logout: "Arhivează datele", deleteAccount: "Șterge contul și toate datele",
       archiveTitle: "Pentru cât timp arhivezi?", archiveDesc: "Cercul va fi ascuns, dar nimic nu se șterge",
       archive1m: "1 lună", archive6m: "6 luni", archive12m: "12 luni", archiveConfirm: "Arhivează",
@@ -1215,7 +1207,7 @@
       deleteForeverStep1: "Sterge tot definitiv", deleteForeverStep2: "Esti sigur? Apasa din nou pentru a sterge", deletePersonBtn: "Sterge aceasta persoana", deletePersonConfirm: "Esti sigur? Apasa din nou",
       demoPersonNote: "Acesta este un exemplu demo pentru a arata posibilitatile. Editeaza cartela ca sa o inlocuiesti cu propria ta persoana, sau doar elimin-o.", demoReplaceBtn: "Inlocuieste cu persoana mea", demoDismissBtn: "Elimina",
       langSection: "Limbă",
-      profileTitle: "Profil", profileSub: "datele tale personale", ownerRole: "Proprietarul cercului", saveNameBtn: "Salveaza numele",
+      profileTitle: "Profil", profileSub: "datele tale personale", ownerRole: "Proprietarul cercului", saveProfileBtn: "Salveaza", profileSaved: "Salvat ✓", profileSaveError: "Nu s-a putut salva, incearca din nou",
       aboutMe: "Despre mine", aboutMePh: "de ex. îmi place să fac surprize, dar țin minte greu datele",
       aboutModeForm: "Formular", aboutModeFree: "Informatii generale",
       aboutFieldGeneral: "Despre mine", aboutFieldInterests: "Interese si hobby-uri", aboutFieldDates: "Date importante", aboutFieldCommunication: "Cum e mai bine sa comunici cu mine",
@@ -1257,82 +1249,6 @@
     if (p.type === 'wave') return 'wave';
     if (p.priorityTag) return 'star';
     return null;
-  }
-
-  // Owner-side Wave by cycle (for manually added people)
-  const PHASE_ADVICE = {
-    menstruation: [
-      { icon: '🕊', text: 'Сегодня лучше без резких тем — будь мягче в разговоре.' },
-      { icon: '💗', text: 'Она чувствует потребность в тепле и поддержке. Скажи что-то доброе и искреннее.' },
-      { icon: '☕', text: 'Предложи уютный вечер дома — без активных планов сегодня.' },
-      { icon: '🍫', text: 'Обними. Принеси шоколадку.' }
-    ],
-    follicular: [
-      { icon: '💬', text: 'Хорошее время для лёгкого общения и совместных планов.' },
-      { icon: '✨', text: 'Энергия растёт — можно предложить что-то интересное или активное.' }
-    ],
-    ovulation: [
-      { icon: '❤️', text: 'У неё отличное настроение — хороший момент предложить встретиться.' },
-      { icon: '💬', text: 'Можно просто написать и разделить хорошее настроение вместе.' }
-    ],
-    luteal: [
-      { icon: '🕊', text: 'К концу цикла чувствительность выше — будь внимательнее к тону.' },
-      { icon: '💗', text: 'Поддержка и спокойствие сейчас важнее развлечений.' }
-    ]
-  };
-
-  function getCyclePhase(cycleStart) {
-    if (!cycleStart) return null;
-    const start = new Date(cycleStart + 'T00:00:00');
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diff = Math.floor((today - start) / 86400000);
-    if (diff < 0) return null;
-    const day = (diff % 28) + 1;
-    if (day <= 5) return { phase: 'menstruation', day, anim: 'soft', text: '🕊 Лучше помягче', label: 'Менструация' };
-    if (day <= 12) return { phase: 'follicular', day, anim: 'neutral', text: '💚 Нейтральное настроение', label: 'Фолликулярная' };
-    if (day <= 16) return { phase: 'ovulation', day, anim: 'ovulation', text: '❤️ Всё супер', label: 'Овуляция' };
-    return { phase: 'luteal', day, anim: day >= 25 ? 'soft' : 'neutral', text: day >= 25 ? '🕊 Лучше помягче' : '💚 Нейтральное настроение', label: 'Лютеиновая' };
-  }
-
-  function applyCycleToPerson(p) {
-    if (!p || p.isDemo) return null;
-    const info = getCyclePhase(p.cycleStart);
-    if (!info) {
-      if (p._cycleAdvice) {
-        p.type = 'regular';
-        p.waveText = null;
-        p.badge = p.priorityTag ? 'star' : null;
-        p.advice = [];
-        p._cycleAdvice = false;
-        p._cycleDay = null;
-        p._cyclePhase = null;
-        p._cycleLabel = null;
-      }
-      return null;
-    }
-    p.type = 'wave';
-    p.waveText = info.text;
-    p.badge = p.badge === 'crown' ? 'crown' : 'wave';
-    p.advice = PHASE_ADVICE[info.phase] || [];
-    p._cycleAdvice = true;
-    p._cycleDay = info.day;
-    p._cyclePhase = info.phase;
-    p._cycleLabel = info.label;
-    return info;
-  }
-
-  function getWaveAnimClass(personOrText) {
-    if (personOrText && typeof personOrText === 'object') {
-      const info = getCyclePhase(personOrText.cycleStart);
-      if (info) return info.anim;
-      personOrText = personOrText.waveText;
-    }
-    if (!personOrText) return 'neutral';
-    const t = String(personOrText).toLowerCase();
-    if (t.includes('мягче') || t.includes('помягче') || t.includes('мягк')) return 'soft';
-    if (t.includes('супер') || t.includes('отлично')) return 'ovulation';
-    return 'neutral';
   }
 
   const REL_KEYS = { partner: 'relPartner', friend: 'relFriend', family: 'relFamily', colleague: 'relColleague' };
@@ -1427,21 +1343,11 @@
       Object.entries(data.fields || {}).forEach(([key, value]) => {
         if (fieldElMap[key] && value) fieldElMap[key].value = value;
       });
-      // Программное .value = ... не вызывает событие 'change', поэтому обычное
-      // автосохранение по изменению поля здесь не сработает — сохраняем явно.
       ownerProfile.about = document.getElementById('ownerAbout').value;
       ownerProfile.interests = document.getElementById('ownerInterests').value;
       ownerProfile.dates = document.getElementById('ownerDates').value;
       ownerProfile.communication = document.getElementById('ownerCommunication').value;
-      if (serverConnected) {
-        apiFetch('/me/profile', {
-          method: 'PUT',
-          body: JSON.stringify({
-            about: ownerProfile.about, interests: ownerProfile.interests,
-            important_dates: ownerProfile.dates, communication_style: ownerProfile.communication
-          })
-        }).catch(err => console.warn('Не удалось сохранить разобранный профиль на сервере:', err.message));
-      }
+      // Не сохраняем сразу — поля просто заполнены, нажми общую кнопку "Сохранить" ниже.
 
       btn.textContent = original;
       btn.disabled = false;
@@ -1478,29 +1384,46 @@
       upload.style.borderStyle = 'solid'; upload.style.padding = '0'; upload.style.overflow = 'hidden';
       upload.innerHTML = `<img src="${ownerProfile.photoDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
       updateHeaderAvatar();
-      if (serverConnected) {
-        apiFetch('/me/profile', { method: 'PUT', body: JSON.stringify({ photo_url: ownerProfile.photoDataUrl }) })
-          .catch(err => console.warn('Не удалось сохранить фото на сервере:', err.message));
-      }
     };
     reader.readAsDataURL(file);
   }
 
-  function updateOwnerName() {
+  async function saveWholeProfile() {
     ownerProfile.name = document.getElementById('ownerNameInput').value || 'Александр';
-    const btn = document.getElementById('saveNameBtn');
+    ownerProfile.about = document.getElementById('ownerAbout').value;
+    ownerProfile.interests = document.getElementById('ownerInterests').value;
+    ownerProfile.dates = document.getElementById('ownerDates').value;
+    ownerProfile.communication = document.getElementById('ownerCommunication').value;
+
+    const btn = document.getElementById('saveProfileBtn');
     const original = btn.textContent;
-    if (serverConnected) {
-      apiFetch('/me/name', { method: 'PUT', body: JSON.stringify({ name: ownerProfile.name }) })
-        .then(() => {
-          btn.textContent = 'Сохранено ✓';
-          setTimeout(() => { btn.textContent = original; }, 2000);
-        })
-        .catch(err => console.warn('Не удалось сохранить имя на сервере:', err.message));
-    } else {
-      btn.textContent = 'Сохранено ✓';
+
+    if (!serverConnected) {
+      btn.textContent = T('profileSaved');
       setTimeout(() => { btn.textContent = original; }, 2000);
+      return;
     }
+
+    btn.disabled = true;
+    try {
+      await Promise.all([
+        apiFetch('/me/name', { method: 'PUT', body: JSON.stringify({ name: ownerProfile.name }) }),
+        apiFetch('/me/profile', {
+          method: 'PUT',
+          body: JSON.stringify({
+            about: ownerProfile.about, interests: ownerProfile.interests,
+            important_dates: ownerProfile.dates, communication_style: ownerProfile.communication,
+            photo_url: ownerProfile.photoDataUrl
+          })
+        })
+      ]);
+      btn.textContent = T('profileSaved');
+    } catch (err) {
+      console.warn('Не удалось сохранить профиль на сервере:', err.message);
+      btn.textContent = T('profileSaveError');
+    }
+    btn.disabled = false;
+    setTimeout(() => { btn.textContent = original; }, 2000);
   }
 
   function updateHeaderAvatar() {
@@ -1527,19 +1450,15 @@
 
   document.getElementById('ownerAbout')?.addEventListener('change', () => {
     ownerProfile.about = document.getElementById('ownerAbout').value;
-    saveOwnerProfileToServer();
   });
   document.getElementById('ownerInterests')?.addEventListener('change', () => {
     ownerProfile.interests = document.getElementById('ownerInterests').value;
-    saveOwnerProfileToServer();
   });
   document.getElementById('ownerDates')?.addEventListener('change', () => {
     ownerProfile.dates = document.getElementById('ownerDates').value;
-    saveOwnerProfileToServer();
   });
   document.getElementById('ownerCommunication')?.addEventListener('change', () => {
     ownerProfile.communication = document.getElementById('ownerCommunication').value;
-    saveOwnerProfileToServer();
   });
 
   function toggleSetting(id) {
@@ -1632,20 +1551,11 @@
       ]},
   };
 
-
-  // Safe storage: localStorage may throw in sandboxed iframes (SecurityError)
-  const _memStore = {};
-  const safeStorage = {
-    getItem(k) { try { return window.localStorage.getItem(k); } catch (e) { return _memStore[k] ?? null; } },
-    setItem(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { _memStore[k] = String(v); } },
-    removeItem(k) { try { window.localStorage.removeItem(k); } catch (e) { delete _memStore[k]; } }
-  };
-
   // Демо-людей, которых уже заменили или удалили, больше не показываем при следующих
   // открытиях приложения (иначе они бы "воскресали" каждый раз, ведь сами демо-записи
   // прописаны прямо в коде, не в базе данных).
   try {
-    const dismissed = JSON.parse(safeStorage.getItem('tendo_dismissed_demos') || '[]');
+    const dismissed = JSON.parse(localStorage.getItem('tendo_dismissed_demos') || '[]');
     dismissed.forEach(key => delete people[key]);
   } catch (e) { /* ничего страшного, просто покажем демо ещё раз */ }
 
@@ -1657,7 +1567,6 @@
   }
 
   let consentGivenAt = null;
-  var selectedGender = null; // var avoids TDZ if consent handlers fire early
 
   // ===== ПОДКЛЮЧЕНИЕ К НАСТОЯЩЕМУ СЕРВЕРУ =====
   const API_BASE_URL = 'https://tendo-server-production.up.railway.app';
@@ -1682,7 +1591,7 @@
         body: JSON.stringify({ idToken: response.credential, language: currentLang })
       });
       sessionToken = data.sessionToken;
-      safeStorage.setItem('tendo_session_token', sessionToken);
+      localStorage.setItem('tendo_session_token', sessionToken);
       if (data.user && data.user.name) {
         ownerProfile.name = data.user.name;
         document.getElementById('ownerNameInput').value = data.user.name;
@@ -1695,7 +1604,7 @@
       alert('Не удалось войти через Google, попробуй ещё раз.');
     }
   }
-  let sessionToken = safeStorage.getItem('tendo_session_token');
+  let sessionToken = localStorage.getItem('tendo_session_token');
   let serverConnected = false;
 
   async function apiFetch(path, options = {}) {
@@ -1723,16 +1632,16 @@
         } catch (checkErr) {
           // Токен устарел (например, сервер обновлялся) — забываем его и входим заново
           sessionToken = null;
-          safeStorage.removeItem('tendo_session_token');
+          localStorage.removeItem('tendo_session_token');
         }
       }
       if (!sessionToken) {
         // Постоянный тестовый идентификатор устройства — реальная версия заменит
         // это настоящим Google-входом (сейчас на сервере это временная заглушка).
-        let deviceId = safeStorage.getItem('tendo_device_id');
+        let deviceId = localStorage.getItem('tendo_device_id');
         if (!deviceId) {
           deviceId = 'device_' + Math.random().toString(36).slice(2);
-          safeStorage.setItem('tendo_device_id', deviceId);
+          localStorage.setItem('tendo_device_id', deviceId);
         }
         const idToken = `stub:${deviceId}:${deviceId}@local.tendo:${encodeURIComponent(ownerProfile.name || 'Пользователь')}`;
         const data = await apiFetch('/auth/google', {
@@ -1740,7 +1649,7 @@
           body: JSON.stringify({ idToken, language: currentLang })
         });
         sessionToken = data.sessionToken;
-        safeStorage.setItem('tendo_session_token', sessionToken);
+        localStorage.setItem('tendo_session_token', sessionToken);
       }
       setServerStatus(true);
       await loadCircleFromServer();
@@ -1811,11 +1720,10 @@
             const colors = colorPool[Object.keys(people).length % colorPool.length];
             people[p.id] = {
               name: p.name, relation: p.relation || 'regular', angle: 0, type: 'regular',
-              badge: null, colors, waveText: null, cycleStart: p.cycle_start || null, priorityTag: !!p.priority,
+              badge: null, colors, waveText: null, priorityTag: !!p.priority,
               photoDataUrl: p.photo_url || null, likes: p.likes || '', remember: p.remember || '', birthdate: p.birthdate || '',
               wishlist: p.wishlist || [], extraDates: p.dates || [], history: p.history || [], advice: [], serverId: p.id
             };
-            applyCycleToPerson(people[p.id]);
           }
         });
         rebuildCircle();
@@ -1874,6 +1782,7 @@
     }
   }
 
+  let selectedGender = null;
 
   function selectGender(gender) {
     selectedGender = gender;
@@ -1969,7 +1878,6 @@
     const keys = Object.keys(people);
     keys.forEach((key, i) => {
       const p = people[key];
-      applyCycleToPerson(p);
       p.angle = (360 / keys.length) * i - 90;
       const rad = (p.angle * Math.PI) / 180;
       const x = cx + r * Math.cos(rad), y = cy + r * Math.sin(rad);
@@ -2002,19 +1910,15 @@
     const remember = document.getElementById('newRemember').value;
     const birthdate = document.getElementById('newBirthday').value;
     const priorityTag = document.getElementById('newPriority').checked;
-    const cycleStart = document.getElementById('newCycleStart').value || null;
     const photoToSave = pendingNewPhoto;
     const key = 'p_' + Date.now();
     const colors = colorPool[Object.keys(people).length % colorPool.length];
-    const person = { name, relation, angle: 0, type: 'regular', badge: null, colors, waveText: null, cycleStart, priorityTag,
+    people[key] = { name, relation, angle: 0, type: 'regular', badge: null, colors, waveText: null, priorityTag,
       photoDataUrl: photoToSave, likes, remember, birthdate, wishlist: [], extraDates: [], history: [], advice: [] };
-    applyCycleToPerson(person);
-    people[key] = person;
     document.getElementById('newName').value = '';
     document.getElementById('newLikes').value = '';
     document.getElementById('newBirthday').value = '';
     document.getElementById('newRemember').value = '';
-    document.getElementById('newCycleStart').value = '';
     document.getElementById('newPriority').checked = false;
     pendingNewPhoto = null;
     const uploadEl = document.getElementById('newPhotoUpload');
@@ -2027,7 +1931,7 @@
     if (serverConnected) {
       apiFetch('/circle', {
         method: 'POST',
-        body: JSON.stringify({ name, relation, likes, remember, birthdate, cycle_start: cycleStart, priority: priorityTag, photo_url: photoToSave, wishlist: [], dates: [], history: [] })
+        body: JSON.stringify({ name, relation, likes, remember, birthdate, priority: priorityTag, photo_url: photoToSave, wishlist: [], dates: [], history: [] })
       }).then(data => {
         if (data.person) people[key].serverId = data.person.id;
       }).catch(err => console.warn('Не удалось сохранить человека на сервере:', err.message));
@@ -2037,7 +1941,6 @@
   // open person card
   function openPerson(key) {
     const p = people[key];
-    applyCycleToPerson(p);
     const tagsHtml = (p.type === 'wave' || p.priorityTag) ? `<div class="tags-row">
       ${p.type === 'wave' ? `<div class="tag wave-tag">${waveBadgeSvg.replace('white','currentColor')} WAVE ${T('today').toLowerCase()}</div>` : ''}
       ${p.priorityTag ? `<div class="tag priority-tag">${starBadgeSvg.replace(/white/g,'currentColor')} ${T('legendPriority')}</div>` : ''}
@@ -2049,8 +1952,6 @@
           ${p.advice.map((a,i) => `<div class="advice-item" onclick="openHelper('${key}', ${i})"><div class="advice-icon">${a.icon}</div><div class="advice-text">${a.text}</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>`).join('')}
         </div>`
       : `<div class="section"><div class="empty-advice">${T('noAdvice')(p.name)}</div></div>`;
-
-    const phaseExtra = p._cycleLabel ? `<div style="font-size:11px;color:var(--text-faint);margin-top:4px">${p._cycleLabel} · день ${p._cycleDay}</div>` : '';
 
     document.getElementById('personContent').innerHTML = `
       ${p.isDemo ? `<div class="section" style="background:rgba(139,110,240,0.1);border-color:rgba(139,110,240,0.3)">
@@ -2069,7 +1970,7 @@
         <div class="profile-info">
           <div class="profile-name-row"><span class="profile-name">${p.name}</span><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" onclick="openEdit('${key}')"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg></div>
           <div class="relation-label">${relLabel(p.relation)}</div>
-          ${p.waveText ? `<div class="profile-state-label">${T('todaySignal')}</div><div class="profile-state-value"><span class="wave-status ${getWaveAnimClass(p)}">${p.waveText}</span></div>${phaseExtra}` : ''}
+          ${p.waveText ? `<div class="profile-state-label">${T('todaySignal')}</div><div class="profile-state-value">${p.waveText}</div>` : ''}
         </div>
       </div>
       ${adviceHtml}
@@ -2282,11 +2183,6 @@
       <div class="field" style="margin-top:22px"><label class="field-label">${T('addLikes')}</label><textarea class="field-input" id="editLikes">${p.likes || ''}</textarea></div>
       <div class="field"><label class="field-label">${T('addBirthday')}</label><input class="field-input" id="editBirthday" placeholder="${T('addBirthdayPh')}" value="${p.birthdate || ''}" /></div>
       <div class="field"><label class="field-label">${T('addRemember')}</label><textarea class="field-input" id="editRemember">${p.remember || ''}</textarea></div>
-      <div class="field">
-        <label class="field-label">Начало цикла</label>
-        <input class="field-input" type="date" id="editCycleStart" value="${p.cycleStart || ''}" />
-        <div style="margin-top:8px;font-size:11.5px;color:var(--text-faint);line-height:1.45;text-align:left">Позаботься о подруге в трудные дни.</div>
-      </div>
       <div class="advice-item" style="cursor:default;margin:0 18px 14px">
         <div class="advice-icon" style="background:rgba(240,169,78,0.15)">⭐</div>
         <div class="advice-text">${T('legendPriority')}</div>
@@ -2335,8 +2231,6 @@
     p.remember = document.getElementById('editRemember').value;
     p.birthdate = document.getElementById('editBirthday').value;
     p.priorityTag = document.getElementById('editPriority').checked;
-    p.cycleStart = document.getElementById('editCycleStart').value || null;
-    applyCycleToPerson(p);
     const activeChip = document.querySelector('#editContent .relation-chip.active');
     if (activeChip) p.relation = activeChip.dataset.rel;
 
@@ -2354,7 +2248,7 @@
       if (serverConnected) {
         apiFetch('/circle', {
           method: 'POST',
-          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, cycle_start: p.cycleStart || null, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
+          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
         }).then(data => {
           if (data.person) people[newKey].serverId = data.person.id;
         }).catch(err => console.warn('Не удалось сохранить нового человека на сервере:', err.message));
@@ -2368,17 +2262,17 @@
     if (serverConnected && p.serverId) {
       apiFetch('/circle/' + p.serverId, {
         method: 'PUT',
-        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, cycle_start: p.cycleStart || null, priority: p.priorityTag, photo_url: p.photoDataUrl })
+        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, photo_url: p.photoDataUrl })
       }).catch(err => console.warn('Не удалось сохранить изменения на сервере:', err.message));
     }
   }
 
   function dismissDemoKey(key) {
     try {
-      const dismissed = JSON.parse(safeStorage.getItem('tendo_dismissed_demos') || '[]');
+      const dismissed = JSON.parse(localStorage.getItem('tendo_dismissed_demos') || '[]');
       if (!dismissed.includes(key)) {
         dismissed.push(key);
-        safeStorage.setItem('tendo_dismissed_demos', JSON.stringify(dismissed));
+        localStorage.setItem('tendo_dismissed_demos', JSON.stringify(dismissed));
       }
     } catch (e) { /* не критично */ }
   }
@@ -2422,28 +2316,36 @@
     showScreen('suggest');
   }
 
-  function contactSupport(el) {
-    const email = 'Nymfa.sv@gmail.com';
-    // try opening mail app
-    window.location.href = `mailto:${email}?subject=Tendo%20—%20поддержка`;
-    // always also copy to clipboard, with visible confirmation, in case no mail app opens
-    const showConfirm = () => {
-      const sub = el.querySelector('.ti-sub');
-      const original = sub.textContent;
-      sub.textContent = T('supportCopied') || (email + ' — скопировано ✓');
-      sub.style.color = 'var(--wave)';
-      setTimeout(() => { sub.textContent = original; sub.style.color = ''; }, 2200);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(email).then(showConfirm).catch(showConfirm);
-    } else {
-      showConfirm();
-    }
+  function sendSupportMessage() {
+    const textEl = document.getElementById('supportText');
+    const text = textEl.value.trim();
+    if (!text) return;
+    const btn = document.getElementById('sendSupportBtn');
+    const original = btn.textContent;
+    btn.disabled = true;
+
     if (serverConnected) {
       apiFetch('/support-tickets', {
         method: 'POST',
-        body: JSON.stringify({ message: 'Пользователь открыл контакт поддержки из приложения (' + ownerProfile.name + ')' })
-      }).catch(err => console.warn('Не удалось зарегистрировать обращение на сервере:', err.message));
+        body: JSON.stringify({ message: text + ` (от: ${ownerProfile.name})` })
+      }).then(() => {
+        btn.textContent = T('supportSent');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.disabled = false;
+          textEl.value = '';
+          showScreen('settings');
+        }, 1400);
+      }).catch(err => {
+        console.warn('Не удалось отправить обращение на сервере:', err.message);
+        btn.textContent = T('supportSendError');
+        btn.disabled = false;
+        setTimeout(() => { btn.textContent = original; }, 2200);
+      });
+    } else {
+      btn.textContent = T('supportSendError');
+      btn.disabled = false;
+      setTimeout(() => { btn.textContent = original; }, 2200);
     }
   }
 
@@ -2530,7 +2432,7 @@
       if (serverConnected) {
         apiFetch('/me', { method: 'DELETE' })
           .then(() => {
-            safeStorage.removeItem('tendo_session_token');
+            localStorage.removeItem('tendo_session_token');
             sessionToken = null;
           })
           .catch(err => console.warn('Не удалось удалить аккаунт на сервере:', err.message));
