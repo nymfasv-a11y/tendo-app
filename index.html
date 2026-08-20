@@ -1811,10 +1811,11 @@
             const colors = colorPool[Object.keys(people).length % colorPool.length];
             people[p.id] = {
               name: p.name, relation: p.relation || 'regular', angle: 0, type: 'regular',
-              badge: null, colors, waveText: null, priorityTag: !!p.priority,
+              badge: null, colors, waveText: null, cycleStart: p.cycle_start || null, priorityTag: !!p.priority,
               photoDataUrl: p.photo_url || null, likes: p.likes || '', remember: p.remember || '', birthdate: p.birthdate || '',
               wishlist: p.wishlist || [], extraDates: p.dates || [], history: p.history || [], advice: [], serverId: p.id
             };
+            applyCycleToPerson(people[p.id]);
           }
         });
         rebuildCircle();
@@ -2026,7 +2027,7 @@
     if (serverConnected) {
       apiFetch('/circle', {
         method: 'POST',
-        body: JSON.stringify({ name, relation, likes, remember, birthdate, priority: priorityTag, photo_url: photoToSave, wishlist: [], dates: [], history: [] })
+        body: JSON.stringify({ name, relation, likes, remember, birthdate, cycle_start: cycleStart, priority: priorityTag, photo_url: photoToSave, wishlist: [], dates: [], history: [] })
       }).then(data => {
         if (data.person) people[key].serverId = data.person.id;
       }).catch(err => console.warn('Не удалось сохранить человека на сервере:', err.message));
@@ -2353,7 +2354,7 @@
       if (serverConnected) {
         apiFetch('/circle', {
           method: 'POST',
-          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
+          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, cycle_start: p.cycleStart || null, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
         }).then(data => {
           if (data.person) people[newKey].serverId = data.person.id;
         }).catch(err => console.warn('Не удалось сохранить нового человека на сервере:', err.message));
@@ -2367,7 +2368,7 @@
     if (serverConnected && p.serverId) {
       apiFetch('/circle/' + p.serverId, {
         method: 'PUT',
-        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, photo_url: p.photoDataUrl })
+        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, cycle_start: p.cycleStart || null, priority: p.priorityTag, photo_url: p.photoDataUrl })
       }).catch(err => console.warn('Не удалось сохранить изменения на сервере:', err.message));
     }
   }
