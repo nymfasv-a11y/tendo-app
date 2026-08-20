@@ -221,14 +221,17 @@
       <div class="empty-advice" style="text-align:left;color:#e5e0ef;line-height:1.6;padding-bottom:18px" data-i18n="consentBody">
         Tendo хранит только то, что ты сам вводишь — о себе и о близких. Мы не собираем геолокацию, не читаем контакты и переписки, не продаём данные третьим лицам. Полный текст — в Политике конфиденциальности.
       </div>
-      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:14px">
+      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:18px">
         <input type="checkbox" id="consentCheckbox" onchange="updateConsentButton()" style="width:20px;height:20px;margin-top:2px;accent-color:var(--wave);flex-shrink:0" />
         <span style="font-size:12.5px;color:var(--text-dim);line-height:1.5"><span data-i18n="consentCheckboxLabel">Я прочитал(а) и согласен(на) с</span> <a href="#" onclick="event.preventDefault();showScreen('privacy-policy')" style="color:var(--wave);text-decoration:underline" data-i18n="consentPolicyLink">Политикой конфиденциальности</a></span>
       </label>
-      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:24px">
-        <input type="checkbox" id="consentAgeCheckbox" onchange="updateConsentButton()" style="width:20px;height:20px;margin-top:2px;accent-color:var(--wave);flex-shrink:0" />
-        <span style="font-size:12.5px;color:var(--text-dim);line-height:1.5" data-i18n="consentAgeLabel">Мне есть 18 лет</span>
-      </label>
+      <div style="margin-bottom:24px">
+        <div style="font-size:12.5px;color:var(--text-dim);margin-bottom:10px" data-i18n="consentGenderLabel">Ты — парень или девушка? (нужно для правильных советов)</div>
+        <div style="display:flex;gap:10px">
+          <div class="relation-chip" id="genderMaleChip" style="flex:1;text-align:center;cursor:pointer" onclick="selectGender('male')" data-i18n="genderMale">Парень</div>
+          <div class="relation-chip" id="genderFemaleChip" style="flex:1;text-align:center;cursor:pointer" onclick="selectGender('female')" data-i18n="genderFemale">Девушка</div>
+        </div>
+      </div>
       <button class="save-btn" id="consentContinueBtn" disabled onclick="giveConsent()" data-i18n="consentContinue" style="opacity:1">Продолжить</button>
     </div>
   </div>
@@ -875,8 +878,8 @@
       aboutOf: "О ", aboutOfHer: "ней", aboutLikes: "Любит", aboutRemember: "Что стоит помнить", nothingAdded: "Пока ничего не добавлено.",
       aboutPrivacy: (name) => `Это твои заметки. Если ${name} сама зарегистрируется в Tendo — её собственные слова о себе будут в приоритете.`,
       wishlistFor: "идеи подарков для ", wishlistEmpty: "Пока пусто. Можно добавить идею, когда она появится.",
-      wishlistAddPh: "например, кружка ручной работы", wishlistAddBtn: "Добавить идею",
-      datesAddLabelPh: "например, годовщина", datesAddValuePh: "например, 3 сентября", datesAddBtn: "Добавить дату",
+      wishlistAddPh: "например, кружка ручной работы", wishlistAddBtn: "Добавить идею", wishlistExamplesHint: "Или выбери из примеров ниже:",
+      datesAddPh: "например, годовщина отношений — 3 сентября", datesAddMoreBtn: "Ещё дата", datesRememberBtn: "Запомнить",
       historyAddPh: "что произошло, что стоит запомнить", historyAddBtn: "Добавить запись",
       datesFor: "важные даты — ", datesEmpty: "Пока даты не добавлены.", birthdayLabel: "День рождения",
       historyFor: "что уже было — ", historyEmpty: "История пока пуста.<br>Здесь появится то, что уже было сделано.",
@@ -916,7 +919,8 @@
       noAccountWarningTitle: "Данные хранятся только на этом телефоне", noAccountWarningDesc: "Без входа в аккаунт данные будут потеряны при смене телефона или удалении приложения. Зарегистрироваться можно в любой момент.", signInGoogle: "Войти через Google",
       privacyOnAlert: "Защита включена: люди, которых ты добавил(а) вручную, больше не смогут найти себя через поиск по Instagram и подтвердить связь.",
       consentTitle: "Прежде чем начать", consentBody: "Tendo хранит только то, что ты сам вводишь — о себе и о близких. Мы не собираем геолокацию, не читаем контакты и переписки, не продаём данные третьим лицам. Полный текст — в Политике конфиденциальности.",
-      consentCheckboxLabel: "Я прочитал(а) и согласен(на) с", consentPolicyLink: "Политикой конфиденциальности", consentContinue: "Продолжить", consentAgeLabel: "Мне есть 18 лет",
+      consentCheckboxLabel: "Я прочитал(а) и согласен(на) с", consentPolicyLink: "Политикой конфиденциальности", consentContinue: "Продолжить",
+      consentGenderLabel: "Ты — парень или девушка? (нужно для правильных советов)", genderMale: "Парень", genderFemale: "Девушка",
       draftWarm: (name, occasion) => `${name}, думаю о тебе. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, просто хотел написать — ты важна для меня. Если что, я рядом сегодня.`,
       draftLight: (name) => `Эй, ${name}! Как ты сегодня? Если что — я на связи.`,
@@ -925,7 +929,7 @@
       helperGenericOccasion: "Просто хочется написать что-то тёплое",
       suggestTitle: "Предложи что-то", suggestSub: "у нас забота — двусторонняя",
       suggestPlaceholder: "например: было бы здорово, если бы Tendo спрашивал про...",
-      suggestSend: "Отправить идею", suggestThanks: "Спасибо! Идея отправлена ✓",
+      suggestSend: "Отправить идею", suggestThanks: "Спасибо! Учтём в одном из обновлений 💛",
       notifTimesLabel: "Во сколько присылать советы",
       coldStart1: "Ты не забудешь даты.", coldStart2: "Будешь знать что подарить точно.", coldStart3: "Будешь знать, когда ты нужен.",
       signature: "By ABSOLUTIS", supportCopied: "Email скопирован ✓",
@@ -966,8 +970,8 @@
       aboutOf: "Про ", aboutOfHer: "неї", aboutLikes: "Любить", aboutRemember: "Що варто пам'ятати", nothingAdded: "Поки нічого не додано.",
       aboutPrivacy: (name) => `Це твої нотатки. Якщо ${name} сама зареєструється в Tendo — її власні слова про себе матимуть пріоритет.`,
       wishlistFor: "ідеї подарунків для ", wishlistEmpty: "Поки порожньо. Можна додати ідею, коли вона з'явиться.",
-      wishlistAddPh: "наприклад, чашка ручної роботи", wishlistAddBtn: "Додати ідею",
-      datesAddLabelPh: "наприклад, річниця", datesAddValuePh: "наприклад, 3 вересня", datesAddBtn: "Додати дату",
+      wishlistAddPh: "наприклад, чашка ручної роботи", wishlistAddBtn: "Додати ідею", wishlistExamplesHint: "Або обери з прикладів нижче:",
+      datesAddPh: "наприклад, річниця стосунків — 3 вересня", datesAddMoreBtn: "Ще дата", datesRememberBtn: "Запам'ятати",
       historyAddPh: "що сталося, що варто запам'ятати", historyAddBtn: "Додати запис",
       datesFor: "важливі дати — ", datesEmpty: "Поки дати не додано.", birthdayLabel: "День народження",
       historyFor: "що вже було — ", historyEmpty: "Історія поки порожня.<br>Тут з'явиться те, що вже було зроблено.",
@@ -1007,7 +1011,8 @@
       noAccountWarningTitle: "Дані зберігаються лише на цьому телефоні", noAccountWarningDesc: "Без входу в акаунт дані буде втрачено при зміні телефону або видаленні застосунку. Зареєструватися можна будь-коли.", signInGoogle: "Увійти через Google",
       privacyOnAlert: "Захист увімкнено: люди, яких ти додав(ла) вручну, більше не зможуть знайти себе через пошук за Instagram і підтвердити зв'язок.",
       consentTitle: "Перш ніж почати", consentBody: "Tendo зберігає лише те, що ти сам вводиш — про себе та близьких. Ми не збираємо геолокацію, не читаємо контакти й переписки, не продаємо дані третім особам. Повний текст — у Політиці конфіденційності.",
-      consentCheckboxLabel: "Я прочитав(ла) і погоджуюсь з", consentPolicyLink: "Політикою конфіденційності", consentContinue: "Продовжити", consentAgeLabel: "Мені є 18 років",
+      consentCheckboxLabel: "Я прочитав(ла) і погоджуюсь з", consentPolicyLink: "Політикою конфіденційності", consentContinue: "Продовжити",
+      consentGenderLabel: "Ти — хлопець чи дівчина? (потрібно для правильних порад)", genderMale: "Хлопець", genderFemale: "Дівчина",
       draftWarm: (name, occasion) => `${name}, думаю про тебе. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, просто хотів написати — ти важлива для мене. Якщо що, я поруч сьогодні.`,
       draftLight: (name) => `Гей, ${name}! Як ти сьогодні? Якщо що — я на звязку.`,
@@ -1016,7 +1021,7 @@
       helperGenericOccasion: "Просто хочеться написати щось тепле",
       suggestTitle: "Запропонуй щось", suggestSub: "у нас турбота — двостороння",
       suggestPlaceholder: "наприклад: було б чудово, якби Tendo питав про...",
-      suggestSend: "Надіслати ідею", suggestThanks: "Дякуємо! Ідею надіслано ✓",
+      suggestSend: "Надіслати ідею", suggestThanks: "Дякуємо! Врахуємо в одному з оновлень 💛",
       notifTimesLabel: "О котрій надсилати поради",
       coldStart1: "Ти не забудеш дати.", coldStart2: "Будеш точно знати, що подарувати.", coldStart3: "Будеш знати, коли ти потрібен.",
       signature: "By ABSOLUTIS", supportCopied: "Email скопійовано ✓",
@@ -1057,8 +1062,8 @@
       aboutOf: "About ", aboutOfHer: "her", aboutLikes: "Likes", aboutRemember: "Worth remembering", nothingAdded: "Nothing added yet.",
       aboutPrivacy: (name) => `These are your own notes. If ${name} signs up for Tendo herself, her own words about herself will take priority.`,
       wishlistFor: "gift ideas for ", wishlistEmpty: "Empty for now. Add an idea whenever one comes up.",
-      wishlistAddPh: "e.g. a handmade mug", wishlistAddBtn: "Add idea",
-      datesAddLabelPh: "e.g. anniversary", datesAddValuePh: "e.g. September 3", datesAddBtn: "Add date",
+      wishlistAddPh: "e.g. a handmade mug", wishlistAddBtn: "Add idea", wishlistExamplesHint: "Or pick from examples below:",
+      datesAddPh: "e.g. anniversary — September 3", datesAddMoreBtn: "Add another", datesRememberBtn: "Remember",
       historyAddPh: "what happened, worth remembering", historyAddBtn: "Add note",
       datesFor: "important dates — ", datesEmpty: "No dates added yet.", birthdayLabel: "Birthday",
       historyFor: "what's happened so far — ", historyEmpty: "History is empty for now.<br>What's already been done will appear here.",
@@ -1098,7 +1103,8 @@
       noAccountWarningTitle: "Data is stored only on this phone", noAccountWarningDesc: "Without signing in, your data will be lost if you change phones or delete the app. You can sign in anytime.", signInGoogle: "Sign in with Google",
       privacyOnAlert: "Protection on: people you added manually will no longer be able to find themselves via Instagram search and confirm the link.",
       consentTitle: "Before we start", consentBody: "Tendo only stores what you enter yourself, about you and the people close to you. We do not collect location, read your contacts or messages, or sell data to third parties. Full text in the Privacy Policy.",
-      consentCheckboxLabel: "I have read and agree to the", consentPolicyLink: "Privacy Policy", consentContinue: "Continue", consentAgeLabel: "I am 18 years or older",
+      consentCheckboxLabel: "I have read and agree to the", consentPolicyLink: "Privacy Policy", consentContinue: "Continue",
+      consentGenderLabel: "Are you male or female? (needed for correct advice phrasing)", genderMale: "Male", genderFemale: "Female",
       draftWarm: (name, occasion) => `${name}, been thinking about you. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, just wanted to say you matter to me. I am here today if you need anything.`,
       draftLight: (name) => `Hey ${name}! How are you today? Let me know if you need anything.`,
@@ -1107,7 +1113,7 @@
       helperGenericOccasion: "Just want to write something warm",
       suggestTitle: "Suggest something", suggestSub: "care goes both ways here",
       suggestPlaceholder: "e.g. it would be great if Tendo asked about...",
-      suggestSend: "Send idea", suggestThanks: "Thanks! Idea sent ✓",
+      suggestSend: "Send idea", suggestThanks: "Thanks! We'll consider it for an upcoming update 💛",
       notifTimesLabel: "When to send tips",
       coldStart1: "You will not forget dates.", coldStart2: "You will always know what to give.", coldStart3: "You will know when you are needed.",
       signature: "By ABSOLUTIS", supportCopied: "Email copied ✓",
@@ -1148,8 +1154,8 @@
       aboutOf: "Despre ", aboutOfHer: "ea", aboutLikes: "Îi place", aboutRemember: "Merită reținut", nothingAdded: "Nimic adăugat încă.",
       aboutPrivacy: (name) => `Acestea sunt notițele tale. Dacă ${name} se înregistrează singură pe Tendo, cuvintele ei proprii despre sine vor avea prioritate.`,
       wishlistFor: "idei de cadouri pentru ", wishlistEmpty: "Momentan gol. Poți adăuga o idee oricând apare una.",
-      wishlistAddPh: "de ex. o cana facuta manual", wishlistAddBtn: "Adauga idee",
-      datesAddLabelPh: "de ex. aniversare", datesAddValuePh: "de ex. 3 septembrie", datesAddBtn: "Adauga data",
+      wishlistAddPh: "de ex. o cana facuta manual", wishlistAddBtn: "Adauga idee", wishlistExamplesHint: "Sau alege din exemplele de mai jos:",
+      datesAddPh: "de ex. aniversare - 3 septembrie", datesAddMoreBtn: "Inca o data", datesRememberBtn: "Retine",
       historyAddPh: "ce s-a intamplat, merita retinut", historyAddBtn: "Adauga notita",
       datesFor: "date importante — ", datesEmpty: "Nu sunt date adăugate încă.", birthdayLabel: "Ziua de naștere",
       historyFor: "ce s-a întâmplat până acum — ", historyEmpty: "Istoricul e gol deocamdată.<br>Aici va apărea ce s-a făcut deja.",
@@ -1189,7 +1195,8 @@
       noAccountWarningTitle: "Datele sunt stocate doar pe acest telefon", noAccountWarningDesc: "Fara autentificare, datele se vor pierde daca schimbi telefonul sau stergi aplicatia. Te poti autentifica oricand.", signInGoogle: "Autentificare cu Google",
       privacyOnAlert: "Protectie activata: persoanele adaugate manual nu se vor mai putea gasi prin cautare Instagram si confirma legatura.",
       consentTitle: "Inainte sa incepem", consentBody: "Tendo stocheaza doar ce introduci tu insuti, despre tine si cei apropiati. Nu colectam locatia, nu citim contactele sau mesajele, nu vindem date tertilor. Text complet in Politica de confidentialitate.",
-      consentCheckboxLabel: "Am citit si sunt de acord cu", consentPolicyLink: "Politica de confidentialitate", consentContinue: "Continua", consentAgeLabel: "Am 18 ani sau mai mult",
+      consentCheckboxLabel: "Am citit si sunt de acord cu", consentPolicyLink: "Politica de confidentialitate", consentContinue: "Continua",
+      consentGenderLabel: "Esti baiat sau fata? (necesar pentru sfaturi corecte)", genderMale: "Baiat", genderFemale: "Fata",
       draftWarm: (name, occasion) => `${name}, mă gândeam la tine. ${occasion.charAt(0).toLowerCase() + occasion.slice(1)}`,
       draftTender: (name) => `${name}, voiam doar sa-ti spun ca contezi pentru mine. Sunt aici azi daca ai nevoie de ceva.`,
       draftLight: (name) => `Hei, ${name}! Ce mai faci azi? Anunta-ma daca ai nevoie de ceva.`,
@@ -1198,7 +1205,7 @@
       helperGenericOccasion: "Vreau doar să scriu ceva cald",
       suggestTitle: "Sugerează ceva", suggestSub: "grija merge în ambele sensuri aici",
       suggestPlaceholder: "de ex. ar fi grozav dacă Tendo ar întreba despre...",
-      suggestSend: "Trimite ideea", suggestThanks: "Mulțumim! Idee trimisă ✓",
+      suggestSend: "Trimite ideea", suggestThanks: "Multumim! O vom lua in considerare intr-o actualizare 💛",
       notifTimesLabel: "La ce oră să trimită sfaturile",
       coldStart1: "Nu vei uita datele.", coldStart2: "Vei sti mereu ce sa daruiesti.", coldStart3: "Vei sti cand esti necesar.",
       signature: "By ABSOLUTIS", supportCopied: "Email copiat ✓",
@@ -1693,15 +1700,23 @@
     }
   }
 
+  let selectedGender = null;
+
+  function selectGender(gender) {
+    selectedGender = gender;
+    document.getElementById('genderMaleChip').classList.toggle('active', gender === 'male');
+    document.getElementById('genderFemaleChip').classList.toggle('active', gender === 'female');
+    updateConsentButton();
+  }
+
   async function saveConsentToServer() {
-    try { await apiFetch('/auth/consent', { method: 'POST' }); }
+    try { await apiFetch('/auth/consent', { method: 'POST', body: JSON.stringify({ gender: selectedGender }) }); }
     catch (err) { console.warn('Не удалось сохранить согласие на сервере:', err.message); }
   }
 
   function updateConsentButton() {
     const policyChecked = document.getElementById('consentCheckbox').checked;
-    const ageChecked = document.getElementById('consentAgeCheckbox').checked;
-    document.getElementById('consentContinueBtn').disabled = !(policyChecked && ageChecked);
+    document.getElementById('consentContinueBtn').disabled = !(policyChecked && selectedGender);
   }
 
   function giveConsent() {
@@ -1728,6 +1743,40 @@
   const wrap = document.getElementById('circleWrap');
   const cx = 174, cy = 234, r = 152;
   const colorPool = [["#e8a6c2","#a3486f"],["#c9bfa0","#7d7256"],["#9aada0","#4d5f52"],["#a89a8a","#5f5348"],["#8fa0ac","#4c5b66"],["#d9b98c","#8f6a3a"],["#d9a3a6","#8c4c50"],["#c9a582","#7a5636"]];
+
+  const monthNamesRu = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const monthDayNamesRu = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+
+  function parseBirthdateToDaysUntil(str) {
+    if (!str) return null;
+    let day, month; // month: 0-11
+    const s = str.trim().toLowerCase();
+
+    // Формат "26 августа" / "26 august" и т.п. — по названию месяца (только русские названия поддержаны сейчас)
+    const nameMatch = s.match(/(\d{1,2})\s+([а-яё]+)/);
+    if (nameMatch) {
+      day = parseInt(nameMatch[1], 10);
+      const idx = monthNamesRu.findIndex(m => m.startsWith(nameMatch[2].slice(0, 4)));
+      if (idx >= 0) month = idx;
+    }
+    // Формат "26.08" / "26/08" / "26 08" / "26-08" (день.месяц, без года или с годом)
+    if (month === undefined) {
+      const numMatch = s.match(/(\d{1,2})[.\-\/\s](\d{1,2})/);
+      if (numMatch) {
+        day = parseInt(numMatch[1], 10);
+        month = parseInt(numMatch[2], 10) - 1;
+      }
+    }
+    if (day === undefined || month === undefined || isNaN(day) || isNaN(month) || month < 0 || month > 11) return null;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let next = new Date(today.getFullYear(), month, day);
+    if (next < today) next = new Date(today.getFullYear() + 1, month, day);
+    const diffDays = Math.round((next - today) / 86400000);
+    const dateLabel = day + ' ' + monthDayNamesRu[month];
+    return { days: diffDays, label: dateLabel };
+  }
 
   function rebuildCircle() {
     const content = document.getElementById('circleContent');
@@ -1868,13 +1917,29 @@
     showScreen('about');
   }
 
+  const wishlistExamples = [
+    { icon: '💐', text: 'Букет цветов' },
+    { icon: '🎧', text: 'Наушники' },
+    { icon: '💆‍♀️', text: 'Сертификат в SPA' },
+    { icon: '📸', text: 'Мгновенная камера' },
+    { icon: '🍾', text: 'Ужин в хорошем ресторане' },
+    { icon: '🕯️', text: 'Набор для уютного вечера дома' },
+    { icon: '✈️', text: 'Путешествие на выходные' }
+  ];
+
   function openWishlist(key) {
     const p = people[key];
     document.getElementById('wishSub').textContent = T('wishlistFor') + p.name;
     document.getElementById('wishBack').onclick = () => openPerson(key);
     const list = p.wishlist.length > 0
       ? `<div class="section">${p.wishlist.map(w => `<div class="advice-item"><div class="advice-icon">🎁</div><div class="advice-text">${w}</div></div>`).join('')}</div>`
-      : `<div class="section"><div class="empty-advice">${T('wishlistEmpty')}</div></div>`;
+      : `<div class="section">
+          <div class="empty-advice">${T('wishlistEmpty')}</div>
+          <div class="empty-advice" style="text-align:left;padding-top:10px;font-size:11.5px;color:var(--text-faint)">${T('wishlistExamplesHint')}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:8px">
+            ${wishlistExamples.map(ex => `<div class="relation-chip" style="cursor:pointer" onclick="document.getElementById('newWishItem').value='${ex.text}'; document.getElementById('newWishItem').focus();">${ex.icon} ${ex.text}</div>`).join('')}
+          </div>
+        </div>`;
     document.getElementById('wishContent').innerHTML = list + `
       <div class="field" style="padding:0 22px">
         <input class="field-input" id="newWishItem" placeholder="${T('wishlistAddPh')}" />
@@ -1902,31 +1967,39 @@
     document.getElementById('datesSub').textContent = T('datesFor') + p.name;
     document.getElementById('datesBack').onclick = () => openPerson(key);
     const rows = [];
-    if (p.birthdayInDays) rows.push({ label: T('birthdayLabel'), date: p.birthdayDate });
-    (p.extraDates || []).forEach(d => rows.push(d));
+    if (p.birthdayInDays) rows.push(T('birthdayLabel') + ' — ' + p.birthdayDate);
+    (p.extraDates || []).forEach(d => rows.push(typeof d === 'string' ? d : (d.label + ' — ' + d.date)));
     const list = rows.length > 0
-      ? `<div class="section">${rows.map(d => `<div class="advice-item"><div class="advice-icon">🎂</div><div class="advice-text"><b>${d.label}</b><br>${d.date}</div></div>`).join('')}</div>`
+      ? `<div class="section">${rows.map(text => `<div class="advice-item" style="cursor:default"><div class="advice-icon">🎂</div><div class="advice-text">${text}</div></div>`).join('')}</div>`
       : `<div class="section"><div class="empty-advice">${T('datesEmpty')}</div></div>`;
     document.getElementById('datesContent').innerHTML = list + `
-      <div class="field" style="padding:0 22px"><input class="field-input" id="newDateLabel" placeholder="${T('datesAddLabelPh')}" /></div>
-      <div class="field" style="padding:0 22px"><input class="field-input" id="newDateValue" placeholder="${T('datesAddValuePh')}" /></div>
-      <div class="save-bar" style="position:static;padding:10px 22px 20px"><button class="save-btn" onclick="addDateItem('${key}')">${T('datesAddBtn')}</button></div>
+      <div class="field" style="padding:0 22px"><input class="field-input" id="newDateEntry" placeholder="${T('datesAddPh')}" /></div>
+      <div class="save-bar" style="position:static;padding:10px 22px 20px;display:flex;gap:10px">
+        <button class="save-btn" style="flex:1;background:rgba(255,255,255,0.08);color:var(--text-dim);box-shadow:none" onclick="addDateItem('${key}', true)">${T('datesAddMoreBtn')}</button>
+        <button class="save-btn" style="flex:1" onclick="addDateItem('${key}', false)">${T('datesRememberBtn')}</button>
+      </div>
     `;
     showScreen('dates');
   }
 
-  function addDateItem(key) {
-    const label = document.getElementById('newDateLabel').value.trim();
-    const value = document.getElementById('newDateValue').value.trim();
-    if (!label || !value) return;
+  function addDateItem(key, keepOpen) {
+    const input = document.getElementById('newDateEntry');
+    const text = input.value.trim();
     const p = people[key];
-    p.extraDates = p.extraDates || [];
-    p.extraDates.push({ label, date: value });
-    if (serverConnected && p.serverId) {
-      apiFetch('/circle/' + p.serverId, { method: 'PUT', body: JSON.stringify({ dates: p.extraDates }) })
-        .catch(err => console.warn('Не удалось сохранить дату:', err.message));
+    if (text) {
+      p.extraDates = p.extraDates || [];
+      p.extraDates.push(text);
+      if (serverConnected && p.serverId) {
+        apiFetch('/circle/' + p.serverId, { method: 'PUT', body: JSON.stringify({ dates: p.extraDates }) })
+          .catch(err => console.warn('Не удалось сохранить дату:', err.message));
+      }
     }
-    openDates(key);
+    if (keepOpen) {
+      openDates(key);
+      document.getElementById('newDateEntry').focus();
+    } else {
+      openPerson(key);
+    }
   }
 
   function openHistory(key) {
@@ -2372,6 +2445,21 @@
   function rebuildToday() {
     const todayList = document.getElementById('todayList');
     todayList.innerHTML = '';
+
+    // Пересчитываем "сколько дней до дня рождения" из настоящей даты рождения —
+    // только для тех, у кого дата реально указана (не для демо-заготовок вроде Оли).
+    Object.values(people).forEach(p => {
+      if (p.birthdate && !p.isDemo) {
+        const result = parseBirthdateToDaysUntil(p.birthdate);
+        if (result && result.days <= 30) {
+          p.birthdayInDays = result.days;
+          p.birthdayDate = result.label;
+        } else {
+          p.birthdayInDays = null;
+        }
+      }
+    });
+
     let withReason = Object.entries(people)
       .filter(([k,p]) => p.type === 'wave' || p.birthdayInDays)
       .sort((a,b) => (b[1].priorityTag ? 1 : 0) - (a[1].priorityTag ? 1 : 0));
