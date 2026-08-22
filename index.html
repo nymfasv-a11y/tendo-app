@@ -236,6 +236,17 @@
     </div>
   </div>
 
+  <div class="screen" id="screen-google-required">
+    <div style="display:flex;flex-direction:column;justify-content:center;min-height:600px;padding:0 26px;text-align:center">
+      <div style="font-size:52px;margin-bottom:16px">🔒</div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;margin-bottom:12px" data-i18n="googleGateTitle">Защити свои данные</div>
+      <div style="font-size:13.5px;color:var(--text-dim);line-height:1.6;margin-bottom:28px" data-i18n="googleGateDesc">Войди через Google, чтобы твой круг не потерялся при смене телефона или очистке браузера. Можно сделать это позже, в Настройках.</div>
+      <button class="save-btn" onclick="signInWithGoogle()" data-i18n="signInGoogle">Войти через Google</button>
+      <button class="save-btn" style="background:rgba(255,255,255,0.06);color:var(--text-dim);box-shadow:none;margin-top:12px" onclick="skipGoogleSignIn()" data-i18n="skipSignIn">Продолжить без входа</button>
+      <div id="googleGateStatus" style="font-size:12px;color:var(--text-faint);margin-top:14px"></div>
+    </div>
+  </div>
+
   <!-- SCREEN 1: CIRCLE -->
   <div class="screen" id="screen-circle">
     <header>
@@ -941,6 +952,7 @@
       aiDailyTitle: "Советы на сегодня", aiDailyLoading: "Собираем советы…",
       waveOfflineNote: "Нет связи с сервером — попробуй позже", waveSavedNote: "Сохранено ✓", waveErrorNote: "Не удалось сохранить, попробуй ещё раз",
       noAccountWarningTitle: "Данные хранятся только на этом телефоне", noAccountWarningDesc: "Без входа в аккаунт данные будут потеряны при смене телефона или удалении приложения. Зарегистрироваться можно в любой момент.", signInGoogle: "Войти через Google",
+      googleGateTitle: "Защити свои данные", googleGateDesc: "Без входа через Google эти данные могут потеряться при смене телефона или очистке браузера. Войти можно и позже, в Настройках.", skipSignIn: "Продолжить без входа",
       privacyOnAlert: "Защита включена: люди, которых ты добавил(а) вручную, больше не смогут найти себя через поиск по Instagram и подтвердить связь.",
       consentTitle: "Прежде чем начать", consentBody: "Tendo хранит только то, что ты сам вводишь — о себе и о близких. Мы не собираем геолокацию, не читаем контакты и переписки, не продаём данные третьим лицам. Полный текст — в Политике конфиденциальности.",
       consentCheckboxLabel: "Я прочитал(а) и согласен(на) с", consentPolicyLink: "Политикой конфиденциальности", consentContinue: "Продолжить",
@@ -1038,6 +1050,7 @@
       aiDailyTitle: "Поради на сьогодні", aiDailyLoading: "Збираємо поради…",
       waveOfflineNote: "Немає зв'язку з сервером — спробуй пізніше", waveSavedNote: "Збережено ✓", waveErrorNote: "Не вдалося зберегти, спробуй ще раз",
       noAccountWarningTitle: "Дані зберігаються лише на цьому телефоні", noAccountWarningDesc: "Без входу в акаунт дані буде втрачено при зміні телефону або видаленні застосунку. Зареєструватися можна будь-коли.", signInGoogle: "Увійти через Google",
+      googleGateTitle: "Захисти свої дані", googleGateDesc: "Без входу через Google ці дані можуть загубитися при зміні телефону або очищенні браузера. Увійти можна і пізніше, в Налаштуваннях.", skipSignIn: "Продовжити без входу",
       privacyOnAlert: "Захист увімкнено: люди, яких ти додав(ла) вручну, більше не зможуть знайти себе через пошук за Instagram і підтвердити зв'язок.",
       consentTitle: "Перш ніж почати", consentBody: "Tendo зберігає лише те, що ти сам вводиш — про себе та близьких. Ми не збираємо геолокацію, не читаємо контакти й переписки, не продаємо дані третім особам. Повний текст — у Політиці конфіденційності.",
       consentCheckboxLabel: "Я прочитав(ла) і погоджуюсь з", consentPolicyLink: "Політикою конфіденційності", consentContinue: "Продовжити",
@@ -1135,6 +1148,7 @@
       aiDailyTitle: "Advice for today", aiDailyLoading: "Gathering advice…",
       waveOfflineNote: "No connection to server — try later", waveSavedNote: "Saved ✓", waveErrorNote: "Could not save, try again",
       noAccountWarningTitle: "Data is stored only on this phone", noAccountWarningDesc: "Without signing in, your data will be lost if you change phones or delete the app. You can sign in anytime.", signInGoogle: "Sign in with Google",
+      googleGateTitle: "Protect your data", googleGateDesc: "Without signing in with Google, this data could be lost if you change phones or clear your browser. You can sign in later in Settings too.", skipSignIn: "Continue without signing in",
       privacyOnAlert: "Protection on: people you added manually will no longer be able to find themselves via Instagram search and confirm the link.",
       consentTitle: "Before we start", consentBody: "Tendo only stores what you enter yourself, about you and the people close to you. We do not collect location, read your contacts or messages, or sell data to third parties. Full text in the Privacy Policy.",
       consentCheckboxLabel: "I have read and agree to the", consentPolicyLink: "Privacy Policy", consentContinue: "Continue",
@@ -1232,6 +1246,7 @@
       aiDailyTitle: "Sfaturi pentru azi", aiDailyLoading: "Adunam sfaturile…",
       waveOfflineNote: "Fara conexiune la server - incearca mai tarziu", waveSavedNote: "Salvat ✓", waveErrorNote: "Nu s-a putut salva, incearca din nou",
       noAccountWarningTitle: "Datele sunt stocate doar pe acest telefon", noAccountWarningDesc: "Fara autentificare, datele se vor pierde daca schimbi telefonul sau stergi aplicatia. Te poti autentifica oricand.", signInGoogle: "Autentificare cu Google",
+      googleGateTitle: "Protejeaza-ti datele", googleGateDesc: "Fara autentificare cu Google, aceste date se pot pierde daca schimbi telefonul sau stergi datele browserului. Te poti autentifica si mai tarziu, din Setari.", skipSignIn: "Continua fara autentificare",
       privacyOnAlert: "Protectie activata: persoanele adaugate manual nu se vor mai putea gasi prin cautare Instagram si confirma legatura.",
       consentTitle: "Inainte sa incepem", consentBody: "Tendo stocheaza doar ce introduci tu insuti, despre tine si cei apropiati. Nu colectam locatia, nu citim contactele sau mesajele, nu vindem date tertilor. Text complet in Politica de confidentialitate.",
       consentCheckboxLabel: "Am citit si sunt de acord cu", consentPolicyLink: "Politica de confidentialitate", consentContinue: "Continua",
@@ -1573,6 +1588,31 @@
   const API_BASE_URL = 'https://tendo-server-production.up.railway.app';
   const GOOGLE_CLIENT_ID = '263876424532-eeb0f3e69ofo9tu1vblu0u4g38eme4d6.apps.googleusercontent.com';
 
+  let isRealAccount = false;
+  let pendingActionAfterSignIn = null;
+
+  // Предупреждаем один раз, в момент первого реального действия (добавление
+  // человека или замена демо-карточки) — но не блокируем: можно продолжить
+  // и без входа, выбор просто показывается на самом уместном моменте.
+  function requireRealAccount(action) {
+    if (isRealAccount || localStorage.getItem('tendo_google_prompt_shown') === 'true') {
+      action();
+      return;
+    }
+    localStorage.setItem('tendo_google_prompt_shown', 'true');
+    pendingActionAfterSignIn = action;
+    showScreen('google-required');
+  }
+
+  function skipGoogleSignIn() {
+    showScreen('circle');
+    if (pendingActionAfterSignIn) {
+      const action = pendingActionAfterSignIn;
+      pendingActionAfterSignIn = null;
+      action();
+    }
+  }
+
   function signInWithGoogle() {
     if (typeof google === 'undefined' || !google.accounts) {
       alert('Google ещё загружается, попробуй через секунду.');
@@ -1593,16 +1633,24 @@
       });
       sessionToken = data.sessionToken;
       localStorage.setItem('tendo_session_token', sessionToken);
+      isRealAccount = true;
       if (data.user && data.user.name) {
         ownerProfile.name = data.user.name;
         document.getElementById('ownerNameInput').value = data.user.name;
       }
       setServerStatus(true);
       await loadCircleFromServer();
-      alert('Вход через Google выполнен ✓');
+      showScreen('circle');
+      if (pendingActionAfterSignIn) {
+        const action = pendingActionAfterSignIn;
+        pendingActionAfterSignIn = null;
+        action();
+      }
     } catch (err) {
       console.warn('Ошибка входа через Google:', err.message);
-      alert('Не удалось войти через Google, попробуй ещё раз.');
+      const statusEl = document.getElementById('googleGateStatus');
+      if (statusEl) statusEl.textContent = 'Не удалось войти, попробуй ещё раз.';
+      else alert('Не удалось войти через Google, попробуй ещё раз.');
     }
   }
   let sessionToken = localStorage.getItem('tendo_session_token');
@@ -1664,6 +1712,9 @@
   async function loadMeState() {
     try {
       const data = await apiFetch('/me');
+      if (data.user) {
+        isRealAccount = !!(data.user.google_id && !data.user.google_id.startsWith('device_'));
+      }
       if (data.user && data.user.archived_until) {
         archiveUntil = new Date(data.user.archived_until);
         rebuildCircle();
@@ -1811,6 +1862,7 @@
 
   function giveConsent() {
     consentGivenAt = new Date();
+    localStorage.setItem('tendo_consent_given', 'true');
     if (serverConnected || sessionToken) saveConsentToServer();
     showScreen('circle');
   }
@@ -1913,6 +1965,10 @@
   function addNewPerson() {
     const name = document.getElementById('newName').value.trim();
     if (!name) { alert(T('addNeedName')); return; }
+    requireRealAccount(() => performAddNewPerson(name));
+  }
+
+  function performAddNewPerson(name) {
     const relation = document.querySelector('#newRelationRow .relation-chip.active').dataset.rel;
     const likes = document.getElementById('newLikes').value;
     const remember = document.getElementById('newRemember').value;
@@ -2232,6 +2288,28 @@
     }
   }
 
+  function performDemoReplace(key) {
+    const p = people[key];
+    // Редактирование демо-карточки = замена её настоящим человеком.
+    // Старый демо-слот "отклоняем" навсегда, данные переносим под новый, настоящий ключ.
+    dismissDemoKey(key);
+    delete people[key];
+    const newKey = 'p_' + Date.now();
+    p.isDemo = false;
+    people[newKey] = p;
+    rebuildCircle();
+    openPerson(newKey);
+
+    if (serverConnected) {
+      apiFetch('/circle', {
+        method: 'POST',
+        body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
+      }).then(data => {
+        if (data.person) people[newKey].serverId = data.person.id;
+      }).catch(err => console.warn('Не удалось сохранить нового человека на сервере:', err.message));
+    }
+  }
+
   function saveEdit(key) {
     const p = people[key];
     p.name = document.getElementById('editName').value || p.name;
@@ -2243,24 +2321,7 @@
     if (activeChip) p.relation = activeChip.dataset.rel;
 
     if (p.isDemo) {
-      // Редактирование демо-карточки = замена её настоящим человеком.
-      // Старый демо-слот "отклоняем" навсегда, данные переносим под новый, настоящий ключ.
-      dismissDemoKey(key);
-      delete people[key];
-      const newKey = 'p_' + Date.now();
-      p.isDemo = false;
-      people[newKey] = p;
-      rebuildCircle();
-      openPerson(newKey);
-
-      if (serverConnected) {
-        apiFetch('/circle', {
-          method: 'POST',
-          body: JSON.stringify({ name: p.name, relation: p.relation, likes: p.likes, remember: p.remember, birthdate: p.birthdate, priority: p.priorityTag, wishlist: [], dates: [], history: [] })
-        }).then(data => {
-          if (data.person) people[newKey].serverId = data.person.id;
-        }).catch(err => console.warn('Не удалось сохранить нового человека на сервере:', err.message));
-      }
+      requireRealAccount(() => performDemoReplace(key));
       return;
     }
 
@@ -2620,6 +2681,11 @@
   applyStaticTranslations();
   rebuildCircle();
   fitToScreen();
+  // Возвращающемуся пользователю (уже дал согласие раньше) не нужно снова
+  // показывать экран согласия и выбор входа — сразу открываем круг.
+  if (localStorage.getItem('tendo_consent_given') === 'true') {
+    showScreen('circle');
+  }
   bootstrapServerSession();
 </script>
 </body>
