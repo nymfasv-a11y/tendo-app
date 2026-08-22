@@ -899,7 +899,7 @@
       inviteManual: "Добавить вручную", inviteManualDesc: "заполни то, что знаешь о человеке сам",
       inviteLink: "Пригласить по ссылке", inviteLinkDesc: "человек сам зарегистрируется и заполнит о себе",
       inviteMsg: (name) => `${name} хочет быть внимательнее к тебе — присоединяйся к Tendo`,
-      inviteGenericMsg: "Присоединяйся к Tendo — приложению, которое помогает быть внимательнее к близким: https://tendo.md\n\nПри установке телефон может спросить «Разрешить установку из неизвестных источников?» — жми «Разрешить», это безопасно, просто приложение пока не в Google Play.", inviteCopied: "Ссылка скопирована ✓",
+      inviteGenericMsg: "Привет! Я пользуюсь Tendo, чтобы проявлять больше заботы — не забывать о важном для тебя и других близких, включая важные даты. Заходи: https://tendo-a11y.github.io/tendo-app/", inviteCopied: "Ссылка скопирована ✓",
       telegramLinkPh: "@ник", instagramLinkPh: "ссылка на профиль", inviteLinkFieldHint: "укажи ник или ссылку конкретного человека — откроем его чат/профиль",
       inviteCopied: "Ссылка скопирована ✓",
       adviceTitle: "Советы на сегодня", variant: ["вариант","варианта","вариантов"],
@@ -997,7 +997,7 @@
       inviteManual: "Додати вручну", inviteManualDesc: "заповни те, що сам знаєш про людину",
       inviteLink: "Запросити за посиланням", inviteLinkDesc: "людина сама зареєструється і заповнить про себе",
       inviteMsg: (name) => `${name} хоче бути уважнішим до тебе — приєднуйся до Tendo`,
-      inviteGenericMsg: "Приєднуйся до Tendo — застосунку, який допомагає бути уважнішим до близьких: https://tendo.md\n\nПід час встановлення телефон може запитати «Дозволити встановлення з невідомих джерел?» — тисни «Дозволити», це безпечно, просто застосунок поки не в Google Play.", inviteCopied: "Посилання скопійовано ✓",
+      inviteGenericMsg: "Привіт! Я користуюся Tendo, щоб проявляти більше турботи — не забувати про важливе для тебе та інших близьких, включно з важливими датами. Заходь: https://tendo-a11y.github.io/tendo-app/", inviteCopied: "Посилання скопійовано ✓",
       telegramLinkPh: "@нік", instagramLinkPh: "посилання на профіль", inviteLinkFieldHint: "вкажи нік або посилання конкретної людини",
       inviteCopied: "Посилання скопійовано ✓",
       adviceTitle: "Поради на сьогодні", variant: ["варіант","варіанти","варіантів"],
@@ -1095,7 +1095,7 @@
       inviteManual: "Add manually", inviteManualDesc: "fill in what you know about them yourself",
       inviteLink: "Invite by link", inviteLinkDesc: "they sign up themselves and fill in their own info",
       inviteMsg: (name) => `${name} wants to be more thoughtful with you — join Tendo`,
-      inviteGenericMsg: "Join Tendo — an app that helps you be more thoughtful with the people close to you: https://tendo.md\n\nWhile installing, your phone may ask to allow installs from unknown sources — tap Allow, it is safe, the app is just not on Google Play yet.", inviteCopied: "Link copied ✓",
+      inviteGenericMsg: "Hey! I use Tendo to be more thoughtful — to not forget what matters to you and other people close to me, including important dates. Check it out: https://tendo-a11y.github.io/tendo-app/", inviteCopied: "Link copied ✓",
       telegramLinkPh: "@username", instagramLinkPh: "profile link", inviteLinkFieldHint: "enter their username or link to open their chat or profile",
       inviteCopied: "Link copied ✓",
       adviceTitle: "Today's tips", variant: ["option","options","options"],
@@ -1193,7 +1193,7 @@
       inviteManual: "Adaugă manual", inviteManualDesc: "completezi tu ce știi despre persoană",
       inviteLink: "Invită prin link", inviteLinkDesc: "persoana se înregistrează singură și își completează datele",
       inviteMsg: (name) => `${name} vrea să fie mai atent cu tine — alătură-te Tendo`,
-      inviteGenericMsg: "Alătură-te Tendo — o aplicație care te ajută să fii mai atent cu cei apropiați: https://tendo.md\n\nLa instalare, telefonul poate intreba \u201cPermiti instalarea din surse necunoscute?\u201d — apasa Permite, e sigur, aplicatia doar nu e inca pe Google Play.", inviteCopied: "Link copiat ✓",
+      inviteGenericMsg: "Salut! Folosesc Tendo ca sa fiu mai atent - sa nu uit ce conteaza pentru tine si pentru alti oameni apropiati mie, inclusiv datele importante. Vezi si tu: https://tendo-a11y.github.io/tendo-app/", inviteCopied: "Link copiat ✓",
       telegramLinkPh: "@utilizator", instagramLinkPh: "link profil", inviteLinkFieldHint: "introdu numele de utilizator sau linkul persoanei",
       inviteCopied: "Link copiat ✓",
       adviceTitle: "Sfaturi pentru azi", variant: ["variantă","variante","variante"],
@@ -2525,7 +2525,13 @@
       if (serverConnected) {
         apiFetch('/me', { method: 'DELETE' })
           .then(() => {
+            // Полностью сбрасываем локальное состояние — при следующем открытии
+            // человек должен пройти согласие заново, а не молча получить новый
+            // анонимный аккаунт с видом "как будто ничего не произошло".
             localStorage.removeItem('tendo_session_token');
+            localStorage.removeItem('tendo_consent_given');
+            localStorage.removeItem('tendo_google_prompt_shown');
+            localStorage.removeItem('tendo_device_id');
             sessionToken = null;
           })
           .catch(err => console.warn('Не удалось удалить аккаунт на сервере:', err.message));
